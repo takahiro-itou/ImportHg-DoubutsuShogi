@@ -13,8 +13,20 @@ AC_CONFIG_HEADER([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/
 AC_PROG_CC
 AM_PROG_AS
 
+dnl
+dnl   Basic Features.
+dnl
 AC_CONFIG_FILES([
     Makefile
+    Bin/Makefile
+    Lib/Makefile
+])
+
+dnl
+dnl   Test Festures.
+dnl
+AC_CONFIG_FILES([
+    Lib/Tests/Makefile
 ])
 
 AC_OUTPUT
