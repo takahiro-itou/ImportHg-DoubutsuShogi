@@ -16,6 +16,7 @@ AM_PROG_AS
 dnl
 dnl   Basic Features.
 dnl
+
 AC_CONFIG_FILES([
     Makefile
     Bin/Makefile
@@ -24,9 +25,14 @@ AC_CONFIG_FILES([
     Lib/Game/Makefile
 ])
 
+AC_CONFIG_FILES([
+    Include/DoubutsuShogi/.Config/ConfiguredDoubutsuShogi.h
+])
+
 dnl
 dnl   Test Festures.
 dnl
+
 AC_CONFIG_FILES([
     Lib/Tests/Makefile
 ])

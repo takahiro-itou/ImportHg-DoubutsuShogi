@@ -9,19 +9,25 @@
 *************************************************************************/
 
 /**
-**      プロジェクトの設定
+**      スクリプトによる設定値が書き込まれるヘッダファイル。
 **
-**      @file   .Config/DoubutsuShogiSettings.h
+**      @file   .Config/ConfiguredDoubutsuShogi.h.in
 **/
 
-#if !defined( DSHOGI_CONFIG_INCLUDED_DOUBUTSU_SHOGI_SETTINGS_H )
-#    define   DSHOGI_CONFIG_INCLUDED_DOUBUTSU_SHOGI_SETTINGS_H
+#if !defined( DSHOGI_CONFIG_INCLUDED_CONFIGURED_DOUBUTSU_SHOGI_H )
+#    define   DSHOGI_CONFIG_INCLUDED_CONFIGURED_DOUBUTSU_SHOGI_H
 
-//  スクリプトによる設定値が書き込まれたヘッダを読み込む。  //
-#include    "DoubutsuShogi/.Config/ConfiguredDoubutsuShogi.h"
+//========================================================================
+//
+//    Name Space.
+//
 
-DSHOGI_NAMESPACE_BEGIN
+/**
+**    名前空間。
+**/
+#define     DSHOGI_NAMESPACE            DOUBUTSUSHOGI
 
-DSHOGI_NAMESPACE_END
+#define     DSHOGI_NAMESPACE_BEGIN      namespace  DSHOGI_NAMESPACE  {
+#define     DSHOGI_NAMESPACE_END        }
 
 #endif
