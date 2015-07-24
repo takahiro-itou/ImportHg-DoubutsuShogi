@@ -10,8 +10,11 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([Lib])
 AC_CONFIG_HEADER([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
 
+AC_LANG_CPLUSPLUS
 AC_PROG_CC
+AC_PROG_CXX
 AM_PROG_AS
+AC_PROG_RANLIB
 
 dnl
 dnl   Basic Features.

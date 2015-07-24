@@ -1,20 +1,29 @@
 
 SRCTOPDIR       =  @top_srcdir@
-INCTOPDIR       =  $(SRCTOPDIR)/Include/DoubutsuShogi
-INCLIBDIR       =  $(INCTOPDIR)/Game
+INCTOPDIR       =  $(SRCTOPDIR)/Include
+INCPKGDIR       =  $(INCTOPDIR)/DoubutsuShogi
+INCLIBDIR       =  $(INCPKGDIR)/Game
 
+EXTRALIBSOURCES      =
+EXTRALIBHEADERS      =
 
-LIBCXXSOURCES        =
+LIBCXXSOURCES        =  \
+        GameController.cpp  \
+        $(EXTRALIBSOURCES)
 
 NOINSTHEADERS        =
 
 INCLIBHEADERS        =  \
-        $(INCLIBDIR)/GameController.h
+        $(INCLIBDIR)/GameController.h  \
+        $(EXTRALIBHEADERS)
 
 NODISTHEADERS        =
 
+AM_CPPFLAGS          =  -I$(INCTOPDIR)
+AM_CFLAGS            =
+AM_CXXFLAGS          =
 
-LIB_STATIC           =
+LIB_STATIC           =  libdsgGame.a
 LIB_SHARED           =
 
 dshogi_includedir              =  $(includedir)/DoubutsuShogi
@@ -23,9 +32,10 @@ dist_noinst_HEADERS            =  $(NOINSTHEADERS)
 
 dshogi_libdir                  =  $(libdir)
 dshogi_config_libdir           =  $(dshogi_libdir)/Game
-dshogi_config_lib_LTLIBRARIES  =  $(LIB_STATIC)
-dshogi_config_lib_LIBRARIES    =  $(LIB_SHARED)
+dshogi_config_lib_LTLIBRARIES  =  $(LIB_SHARED)
+dshogi_config_lib_LIBRARIES    =  $(LIB_STATIC)
 
 nodist_dshogi_include_HEADERS  =  $(NODISTHEADERS)
 
+libdsgGame_a_SOURCES  =  $(LIBCXXSOURCES)
 

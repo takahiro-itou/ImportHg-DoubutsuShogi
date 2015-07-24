@@ -9,15 +9,12 @@
 *************************************************************************/
 
 /**
-**      An Interface of GameController class.
+**      An Implementation of GameController class.
 **
-**      @file   Game/GameController.h
+**      @file   Game/GameController.cpp
 **/
 
-#if !defined( DSHOGI_GAME_INCLUDED_GAME_CONTROLELR_H )
-#    define   DSHOGI_GAME_INCLUDED_GAME_CONTROLELR_H
-
-#include    "DoubutsuShogi/.Config/DoubutsuShogiSettings.h"
+#include    "DoubutsuShogi/Game/GameController.h"
 
 DSHOGI_NAMESPACE_BEGIN
 namespace  GAME  {
@@ -26,15 +23,6 @@ namespace  GAME  {
 //
 //    GameController  class.
 //
-/**
-**    ゲームを管理するクラス。
-**/
-
-class  GameController
-{
-};
 
 }   //  End of namespace  GAME
 DSHOGI_NAMESPACE_END
-
-#endif
