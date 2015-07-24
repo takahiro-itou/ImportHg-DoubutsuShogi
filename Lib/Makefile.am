@@ -1,3 +1,5 @@
 
-SUBDIRS  =  .  Tests
+SUBLIBS  =  Game
+
+SUBDIRS  =  Tests  .Config  $(SUBLIBS)  .
 

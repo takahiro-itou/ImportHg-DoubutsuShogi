@@ -20,6 +20,8 @@ AC_CONFIG_FILES([
     Makefile
     Bin/Makefile
     Lib/Makefile
+    Lib/.Config/Makefile
+    Lib/Game/Makefile
 ])
 
 dnl
