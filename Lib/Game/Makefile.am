@@ -14,7 +14,8 @@ LIBCXXSOURCES        =  \
 NOINSTHEADERS        =
 
 INCLIBHEADERS        =  \
-        $(INCLIBDIR)/GameController.h  \
+        $(INCLIBDIR)/DoubutsuShogiTypes.h  \
+        $(INCLIBDIR)/GameController.h      \
         $(EXTRALIBHEADERS)
 
 NODISTHEADERS        =
