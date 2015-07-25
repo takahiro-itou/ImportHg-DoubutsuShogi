@@ -14,8 +14,11 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([Bin/DoubutsuShogi.cpp])
 AC_CONFIG_HEADERS([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
 
-: ${CFLAGS:='-std=c++11'}
-: ${CXXFLAGS:='-std=c++11'}
+: ${CFLAGS:='-O2  -g'}
+: ${CXXFLAGS:='-O2  -g'}
+
+CFLAGS="${CFLAGS}  -std=c++11  -Wall"
+CXXFLAGS="${CXXFLAGS}  -std=c++11  -Wall  -Weffc++"
 
 dnl
 dnl   Check Programs.
