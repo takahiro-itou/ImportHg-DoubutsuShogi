@@ -19,8 +19,14 @@
 #include    <iostream>
 
 using   namespace   DSHOGI_NAMESPACE;
+using   namespace   DSHOGI_NAMESPACE::GAME;
 
 int  main(int argc, char * argv[])
 {
+    GameController  gc;
+
+    gc.resetGameBoard();
+    gc.writeToStream(std::cout) << std::endl;
+
     return ( 0 );
 }

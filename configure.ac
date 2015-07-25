@@ -1,23 +1,44 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([DoubutsuShogi], [1.0])
+AC_INIT(
+    [DoubutsuShogi],
+    [1.0],
+    [BUG-REPORT-ADDRESS],
+    [DoubutsuShogi])
 
 AC_CONFIG_AUX_DIR([.config])
 
 AM_INIT_AUTOMAKE
 
-AC_CONFIG_SRCDIR([Lib])
-AC_CONFIG_HEADER([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
+AC_CONFIG_SRCDIR([Bin/DoubutsuShogi.cpp])
+AC_CONFIG_HEADERS([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
 
 : ${CFLAGS:='-std=c++11'}
 : ${CXXFLAGS:='-std=c++11'}
 
+dnl
+dnl   Check Programs.
+dnl
 AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_AS
 AC_PROG_RANLIB
+
+dnl
+dnl   Check Header Files.
+dnl
+AC_CHECK_HEADERS([stdint.h])
+
+dnl
+dnl   Check Libraries.
+dnl
+
+dnl
+dnl   Check Types.
+dnl
+AC_TYPE_UINT64_T
 
 dnl
 dnl   Basic Features.
