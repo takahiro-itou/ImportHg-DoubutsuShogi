@@ -124,6 +124,19 @@ GameController::encodeMoveAction(
     retAct  |= ((PIECE_EMPTY ^ piMove) << (posOld * 4));
     retAct  |= ((piCapt ^ piMove) << (posNew * 4));
 
+    /**
+    **  @todo   ヒヨコ不成は、とりあえず考えてない。
+    **/
+    if ( (piMove == PIECE_F_PAWN)
+            && (s_tblPosMap[posNew].second == POS_ROW_1) )
+    {
+        retAct  ^= ((PIECE_F_PAWN ^ PIECE_F_GOLD) << (posNew * 4));
+    } else if ( (piMove == PIECE_S_PAWN)
+            && (s_tblPosMap[posNew].second == POS_ROW_4) )
+    {
+        retAct  ^= ((PIECE_S_PAWN ^ PIECE_S_GOLD) << (posNew * 4));
+    }
+
     if ( piCapt == PIECE_EMPTY ) {
         return ( retAct );
     }
@@ -131,8 +144,8 @@ GameController::encodeMoveAction(
     //  駒を取った時は、持ち駒の増加もエンコードする。  //
     const   ActionData
         piHand  = (piCapt & PIECE_REVERT_PIECE) ^ PIECE_CHANGE_PLAYER;
-    const   ActionData  tmp = (bsCur >> (piHand * 2 + 47));
-    return ( retAct | ((tmp | 0x01) << (piHand * 2 + 48)) );
+    const   ActionData  tmp = (bsCur >> (piHand + 47));
+    return ( retAct | ((tmp | 0x01) << (piHand + 48)) );
 }
 
 //----------------------------------------------------------------

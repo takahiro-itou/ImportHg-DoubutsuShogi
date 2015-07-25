@@ -30,14 +30,24 @@ int  main(int argc, char * argv[])
     gc.writeToStream(std::cout) << std::endl;
 
     //  テスト。ヒヨコを取ってみる。    //
-    const   GameController::BoardState  bs  = gc.getCurrentBoard();
-    const   GameController::ActionData
-        act = GameController::encodeMoveAction(bs, POS_ENC_B3, POS_ENC_B2);
+    GameController::BoardState  bs  = gc.getCurrentBoard();
+    GameController::ActionData  act;
+
+    act = GameController::encodeMoveAction(bs, POS_ENC_B3, POS_ENC_B2);
     std::cout   << "指し手：B3,B2 = 0x"
                 << std::hex << std::setw(16) << std::setfill('0')
                 << act << std::endl;
 
-    gc.playForward(act);
+    bs  = gc.playForward(act);
+    gc.writeToStream(std::cout) << std::endl;
+
+    //  テスト。ヒヨコを成ってみる（動きのルールは無視）。  //
+    act = GameController::encodeMoveAction(bs, POS_ENC_B2, POS_ENC_A1);
+    std::cout   << "指し手：B3,B2 = 0x"
+                << std::hex << std::setw(16) << std::setfill('0')
+                << act << std::endl;
+
+    bs  = gc.playForward(act);
     gc.writeToStream(std::cout) << std::endl;
 
     return ( 0 );
