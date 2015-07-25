@@ -10,6 +10,9 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([Lib])
 AC_CONFIG_HEADER([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
 
+: ${CFLAGS:='-std=c++11'}
+: ${CXXFLAGS:='-std=c++11'}
+
 AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
