@@ -16,4 +16,5 @@ AM_CXXFLAGS          =
 AM_LDFLAGS           =  -L$(LIBTOPDIR)
 
 DoubutsuShogi_SOURCES  =  DoubutsuShogi.cpp
+DoubutsuShogi_LDADD    =  -ldsgGame
 

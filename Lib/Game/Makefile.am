@@ -24,7 +24,7 @@ AM_CPPFLAGS          =  -I$(INCTOPDIR)
 AM_CFLAGS            =
 AM_CXXFLAGS          =
 
-LIB_STATIC           =  libdsgGame.a
+LIB_STATIC           =  libdsgGame.staticd.a
 LIB_SHARED           =
 
 dshogi_includedir              =  $(includedir)/DoubutsuShogi
@@ -38,5 +38,5 @@ dshogi_config_lib_LIBRARIES    =  $(LIB_STATIC)
 
 nodist_dshogi_include_HEADERS  =  $(NODISTHEADERS)
 
-libdsgGame_a_SOURCES  =  $(LIBCXXSOURCES)
+libdsgGame_staticd_a_SOURCES  =  $(LIBCXXSOURCES)
 

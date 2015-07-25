@@ -35,6 +35,8 @@ AC_CONFIG_FILES([
     Include/DoubutsuShogi/.Config/ConfiguredDoubutsuShogi.h
 ])
 
+AC_CONFIG_FILES([Lib/libdsgGame.a:Lib/.LinkerScript/dsgGame.in])
+
 dnl
 dnl   Test Festures.
 dnl
