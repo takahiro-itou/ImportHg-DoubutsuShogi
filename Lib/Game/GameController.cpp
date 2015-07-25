@@ -60,6 +60,24 @@ s_tblPieceName[16]  = {
     "↓キ",  nullptr,   "↓ラ",  "    "
 };
 
+constexpr   const   char  *
+s_tblHandName[8]    = {
+    "ヒ",   "ヒ",   "ゾ",   "ゾ",   "キ",   "キ",   "ラ",   "ラ"
+};
+
+//----------------------------------------------------------------
+/**   配列の要素数を返す関数。
+**
+**/
+
+template  <typename  T,  size_t  N>
+const   size_t
+getArraySize(
+        const  T  (&) [N])
+{
+    return ( N );
+}
+
 //========================================================================
 //
 //    Constructor(s) and Destructor.
@@ -171,7 +189,13 @@ GameController::writeToStream(
 {
     const   BoardState  bs  = (this->m_gsBoard);
 
-    strOut  << "┌──┬──┬──┐\n";
+    strOut  << "後持：";
+    for ( int c = 0; c < 8; ++ c ) {
+        if ( (bs >> (56 + c)) & 0x1 ) {
+            strOut  << s_tblHandName[c];
+        }
+    }
+    strOut  << "\n┌──┬──┬──┐\n";
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         if ( y > 0 ) {
             strOut  << "├──┼──┼──┤\n";
@@ -183,7 +207,14 @@ GameController::writeToStream(
         }
         strOut  << "│\n";
     }
-    strOut  << "└──┴──┴──┘";
+    strOut  << "└──┴──┴──┘\n";
+    strOut  << "先持：";
+    for ( int c = 0; c < 8; ++ c ) {
+        if ( (bs >> (48 + c)) & 0x1 ) {
+            strOut  << s_tblHandName[c];
+        }
+    }
+
     return ( strOut );
 }
 
