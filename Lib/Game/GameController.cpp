@@ -90,6 +90,68 @@ GameController::~GameController()
 //
 
 //----------------------------------------------------------------
+//    入力した指し手を内部形式に変換する。
+//
+
+const   GameController::ActionData
+GameController::encodeMoveAction(
+        const   BoardState  bsCur,
+        const   PosEnc      posOld,
+        const   PosEnc      posNew)
+{
+    const   ActionData  piMove  = (bsCur >> (posOld * 4)) & PIECE_TYPE_MASK;
+    const   ActionData  piCapt  = (bsCur >> (posNew * 4)) & PIECE_TYPE_MASK;
+
+    ActionData  retAct  = 0;
+    retAct  |= ((PIECE_EMPTY ^ piMove) << (posOld * 4));
+    retAct  |= ((piCapt ^ piMove) << (posNew * 4));
+
+    if ( piCapt == PIECE_EMPTY ) {
+        return ( retAct );
+    }
+
+    //  駒を取った時は、持ち駒の増加もエンコードする。  //
+    const   ActionData
+        piHand  = (piCapt & PIECE_REVERT_PIECE) ^ PIECE_CHANGE_PLAYER;
+    const   ActionData  tmp = (bsCur >> (piHand * 2 + 47));
+    return ( retAct | ((tmp | 0x01) << (piHand * 2 + 48)) );
+}
+
+//----------------------------------------------------------------
+//    入力した指し手を内部形式に変換する。
+//
+
+const   GameController::ActionData
+GameController::encodePutAction(
+        const   BoardState  bsCur,
+        const   PieceIndex  hPiece,
+        const   PosEnc      posPut)
+{
+}
+
+//----------------------------------------------------------------
+//    指定した指し手を取り消して盤面を戻す。
+//
+
+const   GameController::BoardState
+GameController::playBackward(
+        const   ActionData  actBwd)
+{
+    return ( this->m_gsBoard ^= actBwd );
+}
+
+//----------------------------------------------------------------
+//    指定した指し手で盤面を進める。
+//
+
+const   GameController::BoardState
+GameController::playForward(
+        const   ActionData  actFwd)
+{
+    return ( this->m_gsBoard ^= actFwd );
+}
+
+//----------------------------------------------------------------
 //    盤面を初期状態に設定する。
 //
 
@@ -124,6 +186,11 @@ GameController::writeToStream(
     strOut  << "└──┴──┴──┘";
     return ( strOut );
 }
+
+//========================================================================
+//
+//    Accessors.
+//
 
 //========================================================================
 //

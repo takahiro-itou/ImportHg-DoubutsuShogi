@@ -78,6 +78,54 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   入力した指し手を内部形式に変換する。
+    **
+    **  @param [in] bsCur     現在の盤面。
+    **  @param [in] posOld    移動する駒の位置。
+    **  @param [in] posNew    移動先の位置。
+    **  @return     指し手データの内部形式。
+    **/
+    static  const   ActionData
+    encodeMoveAction(
+            const   BoardState  bsCur,
+            const   PosEnc      posOld,
+            const   PosEnc      posNew);
+
+    //----------------------------------------------------------------
+    /**   入力した指し手を内部形式に変換する。
+    **
+    **  @param [in] bsCur     現在の盤面。
+    **  @param [in] hPiece    持ち駒の種類。
+    **  @param [in] posPut    駒を打つ位置。
+    **  @return     指し手データの内部形式。
+    **/
+    static  const   ActionData
+    encodePutAction(
+            const   BoardState  bsCur,
+            const   PieceIndex  hPiece,
+            const   PosEnc      posPut);
+
+    //----------------------------------------------------------------
+    /**   指定した指し手を取り消して盤面を戻す。
+    **
+    **  @param [in] actBwd    指し手データの内部形式。
+    **  @return     戻した盤面を返す。
+    **/
+    const   BoardState
+    playBackward(
+            const   ActionData  actBwd);
+
+    //----------------------------------------------------------------
+    /**   指定した指し手で盤面を進める。
+    **
+    **  @param [in] actFwd    指し手データの内部形式。
+    **  @return     進めた盤面を返す。
+    **/
+    const   BoardState
+    playForward(
+            const   ActionData  actFwd);
+
+    //----------------------------------------------------------------
     /**   盤面を初期状態に設定する。
     **
     **  @return     void.
@@ -97,6 +145,23 @@ public:
 
 //========================================================================
 //
+//    Accessors.
+//
+public:
+
+    //----------------------------------------------------------------
+    /**   現在の盤面を取得する。
+    **
+    **  @return     現在の盤面の状態。
+    **/
+    const   BoardState
+    getCurrentBoard()  const
+    {
+        return ( this->m_gsBoard );
+    }
+
+//========================================================================
+//
 //    For Internal Use Only.
 //
 
@@ -106,7 +171,7 @@ public:
 //
 private:
 
-    /**   現在の局面。  **/
+    /**   現在の盤面。  **/
     BoardState      m_gsBoard;
 
 //========================================================================
