@@ -116,6 +116,20 @@ int  testGameController()
                 << bs  << std::endl;
     gc.writeToStream(std::cout) << "\n" << std::endl;
 
+    //  テスト。    //
+    act = GameController::encodePutAction(bs, PIECE_F_ROOK, POS_ENC_A2);
+    std::cout   << "現在局面：0x"
+                << std::hex << std::setw(16) << std::setfill('0')
+                << bs  << std::endl;
+    std::cout   << "指し手  ：0x"
+                << std::hex << std::setw(16) << std::setfill('0')
+                << act << " (.R, A2)" << std::endl;
+    bs  = gc.playForward(act);
+    std::cout   << "現在局面：0x"
+                << std::hex << std::setw(16) << std::setfill('0')
+                << bs  << std::endl;
+    gc.writeToStream(std::cout) << "\n" << std::endl;
+
     return ( 0 );
 }
 
