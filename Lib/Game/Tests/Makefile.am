@@ -1,0 +1,1 @@
+../../Tests/.TestsCommon/Makefile.am
