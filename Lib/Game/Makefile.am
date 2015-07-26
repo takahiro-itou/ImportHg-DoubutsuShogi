@@ -1,4 +1,6 @@
 
+SUBDIRS         =  .  Tests
+
 SRCTOPDIR       =  @top_srcdir@
 INCTOPDIR       =  $(SRCTOPDIR)/Include
 INCPKGDIR       =  $(INCTOPDIR)/DoubutsuShogi

@@ -66,6 +66,7 @@ dnl   Test Festures.
 dnl
 
 AC_CONFIG_FILES([
+    Lib/Game/Tests/Makefile
     Lib/Tests/Makefile
 ])
 
