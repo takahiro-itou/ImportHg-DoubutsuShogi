@@ -147,7 +147,7 @@ GameController::encodeMoveAction(
     //  駒を取った時は、持ち駒の増加もエンコードする。  //
     const   ActionData
         piHand  = (piCapt & PIECE_REVERT_PIECE) ^ PIECE_CHANGE_PLAYER;
-    const   ActionData  tmp = (bsCur >> (piHand + 47));
+    const   ActionData  tmp = (bsCur >> (piHand + 47)) & 0x02;
     return ( retAct | ((tmp | 0x01) << (piHand + 48)) );
 }
 
