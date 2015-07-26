@@ -62,7 +62,10 @@ s_tblPieceName[16]  = {
 
 constexpr   const   char  *
 s_tblHandName[8]    = {
-    "ヒ",   "ヒ",   "ゾ",   "ゾ",   "キ",   "キ",   "ラ",   "ラ"
+    "ヒ",   "ヒ２",
+    "ゾ",   "ゾ２",
+    "キ",   "キ２",
+    "ラ",   "ラ２"
 };
 
 //----------------------------------------------------------------
@@ -158,6 +161,14 @@ GameController::encodePutAction(
         const   PieceIndex  hPiece,
         const   PosEnc      posPut)
 {
+    const   ActionData  actPut  = (hPiece ^ PIECE_EMPTY);
+    ActionData  retAct  = 1;
+
+    retAct  <<= (hPiece + 48);
+    retAct  |= (bsCur & retAct << 1);
+    retAct  |= (actPut << (posPut * 4));
+
+    return ( retAct );
 }
 
 //----------------------------------------------------------------
