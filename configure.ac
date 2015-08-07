@@ -44,6 +44,13 @@ dnl
 AC_TYPE_UINT64_T
 
 dnl
+dnl   Project Name Space.
+dnl
+
+DSHOGI_CNF_NAMESPACE=DOUBUTSUSHOGI
+AC_SUBST(DSHOGI_CNF_NAMESPACE)
+
+dnl
 dnl   Basic Features.
 dnl
 
@@ -71,5 +78,4 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
-
 

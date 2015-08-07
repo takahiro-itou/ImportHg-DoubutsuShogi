@@ -11,7 +11,7 @@
 /**
 **      スクリプトによる設定値が書き込まれるヘッダファイル。
 **
-**      @file   .Config/ConfiguredDoubutsuShogi.h.in
+**      @file       .Config/ConfiguredDoubutsuShogi.h.in
 **/
 
 #if !defined( DSHOGI_CONFIG_INCLUDED_CONFIGURED_DOUBUTSU_SHOGI_H )
@@ -25,7 +25,7 @@
 /**
 **    名前空間。
 **/
-#define     DSHOGI_NAMESPACE            DOUBUTSUSHOGI
+#define     DSHOGI_NAMESPACE            @DSHOGI_CNF_NAMESPACE@
 
 #define     DSHOGI_NAMESPACE_BEGIN      namespace  DSHOGI_NAMESPACE  {
 #define     DSHOGI_NAMESPACE_END        }
