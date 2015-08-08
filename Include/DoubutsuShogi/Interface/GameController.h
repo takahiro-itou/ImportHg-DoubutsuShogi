@@ -19,6 +19,9 @@
 
 #include    "DoubutsuShogi/Common/DoubutsuShogiTypes.h"
 
+#include    <iosfwd>
+#include    <string>
+
 DSHOGI_NAMESPACE_BEGIN
 namespace  INTERFACE  {
 
@@ -73,6 +76,41 @@ public:
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   盤面表示の設定ファイルを開く。
+    **
+    **  @param [in] sFileName   ファイル名。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    openSettingFile(
+            const  std::string  &sFileName);
+
+    //----------------------------------------------------------------
+    /**   盤面を初期状態に設定する。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    resetGameBoard();
+
+    //----------------------------------------------------------------
+    /**   現在の盤面を出力する。
+    **
+    **  @param[out] strOut    出力ストリーム。
+    **  @return     出力後のストリームの参照。
+    **/
+    std::ostream  &
+    writeToStream(
+            std::ostream  & strOut)  const;
 
 //========================================================================
 //
