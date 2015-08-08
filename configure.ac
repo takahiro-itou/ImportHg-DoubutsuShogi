@@ -69,6 +69,7 @@ AC_CONFIG_FILES([
 ])
 
 AC_CONFIG_FILES([Lib/libdsgGame.a:Lib/.LinkerScript/dsgGame.in])
+AC_CONFIG_FILES([Lib/libdsgInterface.a:Lib/.LinkerScript/dsgInterface.in])
 
 dnl
 dnl   Test Festures.
