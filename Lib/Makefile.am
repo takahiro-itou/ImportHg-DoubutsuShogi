@@ -1,5 +1,5 @@
 
-SUBLIBS  =  Common  Game
+SUBLIBS  =  Common  Game  Interface
 
 SUBDIRS  =  Tests  .Config  $(SUBLIBS)  .
 

@@ -61,6 +61,7 @@ AC_CONFIG_FILES([
     Lib/.Config/Makefile
     Lib/Common/Makefile
     Lib/Game/Makefile
+    Lib/Interface/Makefile
 ])
 
 AC_CONFIG_FILES([
