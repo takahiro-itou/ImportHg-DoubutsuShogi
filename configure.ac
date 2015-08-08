@@ -76,6 +76,7 @@ dnl
 
 AC_CONFIG_FILES([
     Lib/Game/Tests/Makefile
+    Lib/Interface/Tests/Makefile
     Lib/Tests/Makefile
 ])
 
