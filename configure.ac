@@ -3,7 +3,7 @@ AC_PREREQ([2.69])
 
 AC_INIT(
     [DoubutsuShogi],
-    [1.0.26],
+    [1.0.43],
     [BUG-REPORT-ADDRESS],
     [DoubutsuShogi])
 
