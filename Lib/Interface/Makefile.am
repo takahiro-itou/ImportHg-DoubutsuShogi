@@ -19,12 +19,14 @@ EXTRANOINSTHEADERS      =
 EXTRALIBHEADERS         =
 
 LIBCXXSOURCEFILES       =  \
+        GameController.cpp  \
         $(EXTRALIBSOURCES)
 
 LIBINSTANTIATIONS       =
 LIBCXXINLINEFILES       =
 
 LIBNOINSTHEADERS        =  \
+        $(INCLIBDIR)/GameController.h  \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
