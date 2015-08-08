@@ -27,6 +27,7 @@ LIBCXXINLINEFILES       =
 
 LIBNOINSTHEADERS        =  \
         $(INCLIBDIR)/GameController.h  \
+        $(INCLIBDIR)/GameStatus.h      \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
