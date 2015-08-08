@@ -11,15 +11,15 @@
 /**
 **      アプリケーション本体。
 **
-**      @file   DoubutsuShogi.cpp
+**      @file       Bin/DoubutsuShogi.cpp
 **/
 
-#include    "DoubutsuShogi/Game/GameController.h"
+#include    "DoubutsuShogi/Interface/GameController.h"
 
 #include    <iostream>
 
 using   namespace   DSHOGI_NAMESPACE;
-using   namespace   DSHOGI_NAMESPACE::GAME;
+using   namespace   DSHOGI_NAMESPACE::INTERFACE;
 
 int  main(int argc, char * argv[])
 {
