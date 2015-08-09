@@ -21,6 +21,8 @@
 
 #include    "ViewBuffer.h"
 
+#include    "DoubutsuShogi/Game/BoardState.h"
+
 #include    <iosfwd>
 #include    <string>
 
@@ -135,8 +137,8 @@ public:
 //
 private:
 
-    /**   盤面の状態。  **/
-    ViewBuffer      m_gsCur;
+    /**   盤面の状態。      **/
+    GAME::BoardState    m_gcBoard;
 
 //========================================================================
 //

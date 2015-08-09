@@ -84,7 +84,7 @@ s_tblHandName[NUM_PIECE_TYPES][3]   = {
 //
 
 GameController::GameController()
-    : m_gsCur()
+    : m_gcBoard()
 {
 }
 
@@ -135,23 +135,24 @@ GameController::openSettingFile(
 ErrCode
 GameController::resetGameBoard()
 {
-    for ( int pos = 0; pos < POS_MATRIX_SIZE; ++ pos ) {
-        this->m_gsCur.piBoard[pos]  = PIECE_EMPTY;
-    }
-    this->m_gsCur.piBoard[ POS_MAT_A1 ] = PIECE_WHITE_ROOK;
-    this->m_gsCur.piBoard[ POS_MAT_B1 ] = PIECE_WHITE_KING;
-    this->m_gsCur.piBoard[ POS_MAT_C1 ] = PIECE_WHITE_BISHOP;
-    this->m_gsCur.piBoard[ POS_MAT_B2 ] = PIECE_WHITE_PAWN;
-    this->m_gsCur.piBoard[ POS_MAT_B3 ] = PIECE_BLACK_PAWN;
-    this->m_gsCur.piBoard[ POS_MAT_A4 ] = PIECE_BLACK_BISHOP;
-    this->m_gsCur.piBoard[ POS_MAT_B4 ] = PIECE_BLACK_KING;
-    this->m_gsCur.piBoard[ POS_MAT_C4 ] = PIECE_BLACK_ROOK;
+    return ( this->m_gcBoard.resetGameBoard() );
+    // for ( int pos = 0; pos < POS_MATRIX_SIZE; ++ pos ) {
+    //     this->m_gsCur.piBoard[pos]  = PIECE_EMPTY;
+    // }
+    // this->m_gsCur.piBoard[ POS_MAT_A1 ] = PIECE_WHITE_ROOK;
+    // this->m_gsCur.piBoard[ POS_MAT_B1 ] = PIECE_WHITE_KING;
+    // this->m_gsCur.piBoard[ POS_MAT_C1 ] = PIECE_WHITE_BISHOP;
+    // this->m_gsCur.piBoard[ POS_MAT_B2 ] = PIECE_WHITE_PAWN;
+    // this->m_gsCur.piBoard[ POS_MAT_B3 ] = PIECE_BLACK_PAWN;
+    // this->m_gsCur.piBoard[ POS_MAT_A4 ] = PIECE_BLACK_BISHOP;
+    // this->m_gsCur.piBoard[ POS_MAT_B4 ] = PIECE_BLACK_KING;
+    // this->m_gsCur.piBoard[ POS_MAT_C4 ] = PIECE_BLACK_ROOK;
 
-    for ( int i = 0; i < NUM_PIECE_TYPES; ++ i ) {
-        this->m_gsCur.nHands[i] = 0;
-    }
+    // for ( int i = 0; i < NUM_PIECE_TYPES; ++ i ) {
+    //     this->m_gsCur.nHands[i] = 0;
+    // }
 
-    return ( ERR_FAILURE );
+    // return ( ERR_FAILURE );
 }
 
 //----------------------------------------------------------------
@@ -162,9 +163,13 @@ std::ostream  &
 GameController::writeToStream(
         std::ostream  & strOut)  const
 {
+    ViewBuffer      bufView;
+
+    this->m_gcBoard.copyToViewBuffer( bufView );
+
     strOut  << "後持：";
     for ( int c = PIECE_WHITE_PAWN; c < PIECE_WHITE_GOLD; ++ c ) {
-        const  int  numHand = this->m_gsCur.nHands[c];
+        const  int  numHand = bufView.nHands[c];
         if ( numHand > 0 ) {
             strOut  << s_tblHandName[c][numHand];
         }
@@ -177,7 +182,7 @@ GameController::writeToStream(
         }
         for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
             const  int  posIdx  = s_tblPosEnc[y][x];
-            const  int  nPiece  = (this->m_gsCur.piBoard[posIdx]);
+            const  int  nPiece  = (bufView.piBoard[posIdx]);
             strOut  << "│" << s_tblPieceName[nPiece];
         }
         strOut  << "│\n";
@@ -186,7 +191,7 @@ GameController::writeToStream(
 
     strOut  << "先持：";
     for ( int c = PIECE_BLACK_PAWN; c < PIECE_BLACK_GOLD; ++ c ) {
-        const  int  numHand = this->m_gsCur.nHands[c];
+        const  int  numHand = bufView.nHands[c];
         if ( numHand > 0 ) {
             strOut  << s_tblHandName[c][numHand];
         }
