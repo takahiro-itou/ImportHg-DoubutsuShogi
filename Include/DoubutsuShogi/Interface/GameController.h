@@ -19,7 +19,7 @@
 
 #include    "DoubutsuShogi/Common/DoubutsuShogiTypes.h"
 
-#include    "GameStatus.h"
+#include    "ViewBuffer.h"
 
 #include    <iosfwd>
 #include    <string>
@@ -136,7 +136,7 @@ public:
 private:
 
     /**   盤面の状態。  **/
-    GameStatus      m_gsCur;
+    ViewBuffer      m_gsCur;
 
 //========================================================================
 //
