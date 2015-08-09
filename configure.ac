@@ -60,6 +60,7 @@ AC_CONFIG_FILES([
     Lib/Makefile
     Lib/.Config/Makefile
     Lib/Common/Makefile
+    Lib/Game/Makefile
     Lib/Interface/Makefile
 ])
 
@@ -67,6 +68,7 @@ AC_CONFIG_FILES([
     Include/DoubutsuShogi/.Config/ConfiguredDoubutsuShogi.h
 ])
 
+AC_CONFIG_FILES([Lib/libdsgGame.a:Lib/.LinkerScript/dsgGame.in])
 AC_CONFIG_FILES([Lib/libdsgInterface.a:Lib/.LinkerScript/dsgInterface.in])
 
 dnl
@@ -74,6 +76,7 @@ dnl   Test Festures.
 dnl
 
 AC_CONFIG_FILES([
+    Lib/Game/Tests/Makefile
     Lib/Interface/Tests/Makefile
     Lib/Tests/Makefile
 ])
