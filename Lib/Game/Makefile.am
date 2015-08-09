@@ -19,6 +19,7 @@ EXTRANOINSTHEADERS      =
 EXTRALIBHEADERS         =
 
 LIBCXXSOURCEFILES       =  \
+        BoardState.cpp      \
         $(EXTRALIBSOURCES)
 
 LIBINSTANTIATIONS       =
@@ -28,6 +29,7 @@ LIBNOINSTHEADERS        =  \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
+        $(INCLIBDIR)/BoardState.h  \
         $(EXTRALIBHEADERS)
 
 LIBNODISTHEADERS        =
