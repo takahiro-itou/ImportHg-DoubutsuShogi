@@ -5,6 +5,7 @@
 
 EXTRATESTS          =
 TESTS               =  \
+        BoardStateTest  \
         $(EXTRATESTS)
 
 ##
@@ -22,4 +23,6 @@ LDADD               =  ../libdsgGame.staticd.a
 ##
 ##    Test Programs.
 ##
+
+BoardStateTest_SOURCES  =  BoardStateTest.cpp
 
