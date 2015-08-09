@@ -29,7 +29,8 @@ LIBNOINSTHEADERS        =  \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
-        $(INCLIBDIR)/BoardState.h  \
+        $(INCLIBDIR)/BoardState.h     \
+        $(INCLIBDIR)/InternalTypes.h  \
         $(EXTRALIBHEADERS)
 
 LIBNODISTHEADERS        =
