@@ -19,6 +19,10 @@
 
 #include    "DoubutsuShogi/Common/DoubutsuShogiTypes.h"
 
+#include    "InternalTypes.h"
+
+#include    "DoubutsuShogi/Interface/ViewBuffer.h"
+
 DSHOGI_NAMESPACE_BEGIN
 namespace  GAME  {
 
@@ -57,11 +61,37 @@ public:
 //
 //    Public Member Functions.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   盤面を初期状態に設定する。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    resetGameBoard();
 
 //========================================================================
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   現在の盤面を取得して、表示用バッファにコピーする。
+    **
+    **  @param[out] bufView   表示用バッファ。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    copyToViewBuffer(
+            INTERFACE::ViewBuffer  &bufView)  const;
 
 //========================================================================
 //
@@ -72,6 +102,13 @@ public:
 //
 //    Member Variables.
 //
+private:
+
+    /**   盤上の状態。  **/
+    FieldConst      m_bsField[GPOS_NUM_ROWS][GPOS_NUM_COLS];
+
+    /**   持ち駒の数。  **/
+    int             m_nHands [FIELD_WALL_SQUARE];
 
 //========================================================================
 //
@@ -88,5 +125,3 @@ public:
 DSHOGI_NAMESPACE_END
 
 #endif
-
-

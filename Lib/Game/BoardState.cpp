@@ -52,10 +52,31 @@ BoardState::~BoardState()
 //    Public Member Functions.
 //
 
+//----------------------------------------------------------------
+//    盤面を初期状態に設定する。
+//
+
+ErrCode
+BoardState::resetGameBoard()
+{
+    return ( ERR_FAILURE );
+}
+
 //========================================================================
 //
 //    Accessors.
 //
+
+//----------------------------------------------------------------
+//    現在の盤面を取得して、表示用バッファにコピーする。
+//
+
+ErrCode
+BoardState::copyToViewBuffer(
+        INTERFACE::ViewBuffer  &bufView)  const
+{
+    return ( ERR_FAILURE );
+}
 
 //========================================================================
 //
