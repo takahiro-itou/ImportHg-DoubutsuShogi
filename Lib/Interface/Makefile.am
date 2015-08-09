@@ -26,11 +26,11 @@ LIBINSTANTIATIONS       =
 LIBCXXINLINEFILES       =
 
 LIBNOINSTHEADERS        =  \
-        $(INCLIBDIR)/GameController.h  \
-        $(INCLIBDIR)/GameStatus.h      \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
+        $(INCLIBDIR)/GameController.h  \
+        $(INCLIBDIR)/ViewBuffer.h      \
         $(EXTRALIBHEADERS)
 
 LIBNODISTHEADERS        =
@@ -68,7 +68,7 @@ AM_CXXFLAGS             =
 dshogi_includedir                 =  $(includedir)/DoubutsuShogi
 dshogi_interface_includedir       =  $(dshogi_includedir)/Interface
 dshogi_interface_include_HEADERS  =  $(INCLIBHEADERS)
-dist_noinst_HEADERS               =  $(NOINSTHEADERS)
+dist_noinst_HEADERS               =  $(LIBNOINSTHEADERS)
 
 dshogi_libdir                     =  $(libdir)
 dshogi_interface_libdir           =  $(dshogi_libdir)/Interface

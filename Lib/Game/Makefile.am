@@ -62,12 +62,12 @@ AM_CXXFLAGS             =
 ##    List of Installs.
 ##
 
-dshogi_includedir                 =  $(includedir)/DoubutsuShogi
+dshogi_includedir            =  $(includedir)/DoubutsuShogi
 dshogi_game_includedir       =  $(dshogi_includedir)/Game
 dshogi_game_include_HEADERS  =  $(INCLIBHEADERS)
-dist_noinst_HEADERS               =  $(NOINSTHEADERS)
+dist_noinst_HEADERS          =  $(LIBNOINSTHEADERS)
 
-dshogi_libdir                     =  $(libdir)
+dshogi_libdir                =  $(libdir)
 dshogi_game_libdir           =  $(dshogi_libdir)/Game
 dshogi_game_lib_LTLIBRARIES  =  $(LIB_SHARED)
 dshogi_game_lib_LIBRARIES    =  $(LIB_STATIC)
