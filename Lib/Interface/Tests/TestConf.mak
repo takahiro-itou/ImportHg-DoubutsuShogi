@@ -3,17 +3,16 @@
 ##    List of Tests.
 ##
 
-EXTRATESTS          =
-TESTS               =  \
+EXTRATESTS              =
+TESTS                   =  \
         $(EXTRATESTS)
 
 ##
 ##    Compile and Link Options.
 ##
 
-TESTCPPFLAGS        =
-TESTLDFLAGS         =
-LDADD               =  ../libdsgInterface.staticd.a
+TESTCPPFLAGS            +=
+TESTLDFLAGS             +=  ../libdsgInterface.staticd.a
 
 ##
 ##    Test Configurations.
