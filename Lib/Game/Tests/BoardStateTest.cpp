@@ -18,9 +18,6 @@
 
 #include    "DoubutsuShogi/Game/BoardState.h"
 
-#include    <iomanip>
-#include    <iostream>
-
 DSHOGI_NAMESPACE_BEGIN
 namespace  GAME  {
 
@@ -41,6 +38,8 @@ public:
     virtual  void   setUp()     override    { }
     virtual  void   tearDown()  override    { }
 };
+
+CPPUNIT_TEST_SUITE_REGISTRATION( BoardStateTest );
 
 }   //  End of namespace  GAME
 DSHOGI_NAMESPACE_END

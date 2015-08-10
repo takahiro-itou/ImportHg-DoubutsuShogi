@@ -44,8 +44,9 @@ LDTESTDRIVERS           +=  $(DRIVER_LIBDIR)/libTestDriver.a
 ##    Compile and Link Options.
 ##
 
-TESTXUNITCPPFLAGS       =
+TESTXUNITCPPFLAGS       =  -DHAVE_CPPUNIT=1
 TESTXUNITLDFLAGS        =
+TESTXUNITLINKLDADD      =  -lcppunit
 
 AM_CPPFLAGS             =  \
         -I$(TESTEE_SRCDIR)  \
@@ -57,10 +58,12 @@ AM_CPPFLAGS             =  \
 AM_CFLAGS               =  $(TESTXUNITCPPFLAGS)
 AM_CXXFLAGS             =  $(TESTXUNITCPPFLAGS)
 AM_LDFLAGS              =  \
-        $(LDTESTDRIVERS)     \
         $(TESTLDFLAGS)       \
         $(TESTXUNITLDFLAGS)  \
         -L$(LIBTOPDIR)
+LDADD                   =  \
+        $(LDTESTDRIVERS)       \
+        $(TESTXUNITLINKLDADD)
 
 ##
 ##    List of Installs.

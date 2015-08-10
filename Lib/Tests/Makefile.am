@@ -44,7 +44,7 @@ LDTESTDRIVERS           +=
 ##
 
 TESTXUNITCPPFLAGS       =  -DHAVE_CPPUNIT=1
-TESTXUNITLDFLAGS        =
+TESTXUNITLDFLAGS        =  -lcppunit
 
 AM_CPPFLAGS             =  \
         -I$(TESTEE_SRCDIR)  \
