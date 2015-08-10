@@ -13,7 +13,8 @@ TESTS                   =  \
 ##
 
 TESTCPPFLAGS            +=
-TESTLDFLAGS             +=  ../libdsgGame.staticd.a
+TESTLDFLAGS             +=
+TESTLIBTESTEE           +=  -ldsgGame
 
 ##
 ##    Test Configurations.

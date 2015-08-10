@@ -41,8 +41,18 @@ public:
 
 CPPUNIT_TEST_SUITE_REGISTRATION( BoardStateTest );
 
+//========================================================================
+//
+//    Tests.
+//
+
 }   //  End of namespace  GAME
 DSHOGI_NAMESPACE_END
+
+//========================================================================
+//
+//    エントリポイント。
+//
 
 int  main(int argc, char * argv[])
 {

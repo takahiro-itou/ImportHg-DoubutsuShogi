@@ -22,8 +22,10 @@ TESTDRIVERS             =
 LIBNOINSTHEADERS        =
 EXTRADRIVERS            =
 LDTESTDRIVERS           =
+
 TESTCPPFLAGS            =
 TESTLDFLAGS             =
+TESTLIBTESTEE           =
 
 ##
 ##    Test Configurations.
@@ -62,6 +64,7 @@ AM_LDFLAGS              =  \
         $(TESTXUNITLDFLAGS)  \
         -L$(LIBTOPDIR)
 LDADD                   =  \
+        $(TESTLIBTESTEE)       \
         $(LDTESTDRIVERS)       \
         $(TESTXUNITLINKLDADD)
 
