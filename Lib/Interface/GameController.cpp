@@ -129,6 +129,43 @@ GameController::openSettingFile(
 }
 
 //----------------------------------------------------------------
+//    最後の指し手を取り消して盤面を戻す。
+//
+
+ErrCode
+GameController::playBackward()
+{
+    return ( ERR_FAILURE );
+}
+
+//----------------------------------------------------------------
+//    駒を移動する指し手を入力して盤面を進める。
+//
+
+ErrCode
+GameController::playMoveAction(
+        const   PosCol  xOldCol,
+        const   PosRow  yOldRow,
+        const   PosCol  xNewCol,
+        const   PosRow  yNewRow)
+{
+    return ( ERR_FAILURE );
+}
+
+//----------------------------------------------------------------
+//    持ち駒を打つ指し手を入力して盤面を進める。
+//
+
+ErrCode
+GameController::playPutAction(
+        const   PosCol      xPutCol,
+        const   PosRow      yPutRow,
+        const   PieceIndex  pHand)
+{
+    return ( ERR_FAILURE );
+}
+
+//----------------------------------------------------------------
 //    盤面を初期状態に設定する。
 //
 
@@ -148,7 +185,7 @@ GameController::writeToStream(
 {
     ViewBuffer      bufView;
 
-    this->m_gcBoard.copyToViewBuffer( bufView );
+    writeToViewBuffer( bufView );
 
     strOut  << "後持：";
     for ( int c = PIECE_WHITE_PAWN; c < PIECE_WHITE_GOLD; ++ c ) {
@@ -181,6 +218,17 @@ GameController::writeToStream(
     }
 
     return ( strOut );
+}
+
+//----------------------------------------------------------------
+//    現在の盤面を表示用バッファにコピーする。
+//
+
+ErrCode
+GameController::writeToViewBuffer(
+        ViewBuffer  &bufView)  const
+{
+    return ( this->m_gcBoard.copyToViewBuffer(bufView) );
 }
 
 //========================================================================
