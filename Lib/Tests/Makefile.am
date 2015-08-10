@@ -43,7 +43,7 @@ LDTESTDRIVERS           +=
 ##    Compile and Link Options.
 ##
 
-TESTXUNITCPPFLAGS       =
+TESTXUNITCPPFLAGS       =  -DHAVE_CPPUNIT=1
 TESTXUNITLDFLAGS        =
 
 AM_CPPFLAGS             =  \
