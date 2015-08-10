@@ -167,7 +167,12 @@ GameController::playPutAction(
         const   PosRow      yPutRow,
         const   PieceIndex  pHand)
 {
-    return ( ERR_FAILURE );
+    const   GAME::BoardState::ActionData
+        act = this->m_gcBoard.encodePutAction(
+                    xPutCol, yPutRow, pHand);
+    this->m_gcBoard.playForward(act);
+
+    return ( ERR_SUCCESS );
 }
 
 //----------------------------------------------------------------

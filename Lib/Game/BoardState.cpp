@@ -53,13 +53,28 @@ s_tblPieceConv[FIELD_WALL_SQUARE + 1]   =
 };
 
 constexpr   GuardPosCol
-s_tblPosColConv[] = {
+s_tblPosColConv[]   =
+{
     GPOS_COL_A,  GPOS_COL_B,  GPOS_COL_C
 };
 
 constexpr   GuardPosRow
-s_tblPosRowConv[] = {
+s_tblPosRowConv[]   =
+{
     GPOS_ROW_1,  GPOS_ROW_2,  GPOS_ROW_3,  GPOS_ROW_4
+};
+
+constexpr   FieldConst
+s_tblHandConv[INTERFACE::NUM_PIECE_TYPES]   =
+{
+    FIELD_EMPTY_SQUARE,
+    FIELD_BLACK_PAWN,   FIELD_BLACK_BISHOP,
+    FIELD_BLACK_ROOK,   FIELD_BLACK_KING,
+    FIELD_BLACK_GOLD,
+
+    FIELD_WHITE_PAWN,   FIELD_WHITE_BISHOP,
+    FIELD_WHITE_ROOK,   FIELD_WHITE_KING,
+    FIELD_WHITE_GOLD
 };
 
 }   //  End of (Unnamed) namespace.
@@ -133,6 +148,10 @@ BoardState::encodePutAction(
         const   PieceIndex  pHand)  const
 {
     const   ActionData  act = {
+        GPOS_COL_L,  GPOS_ROW_U,
+        s_tblPosColConv[xPutCol],
+        s_tblPosRowConv[yPutRow],
+        0, s_tblHandConv[pHand]
     };
 
     return ( act );
@@ -173,6 +192,8 @@ BoardState::playForward(
         fBefore = FIELD_EMPTY_SQUARE;
     } else {
         //  持ち駒を打った場合の処理。  //
+        -- ibSt.m_nHands[actFwd.putHand];
+        fAfter  = actFwd.putHand;
     }
 
     return ( this->m_ibState );
