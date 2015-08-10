@@ -114,7 +114,7 @@ BoardState::resetGameBoard()
         this->m_nHands[hp]  = 0;
     }
 
-    return ( ERR_FAILURE );
+    return ( ERR_SUCCESS );
 }
 
 //========================================================================
@@ -140,21 +140,21 @@ BoardState::copyToViewBuffer(
     }
 
     for ( int hp = INTERFACE::PIECE_BLACK_PAWN;
-            hp < INTERFACE::PIECE_BLACK_GOLD; ++ hp )
+            hp <= INTERFACE::PIECE_BLACK_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_BLACK_PAWN - INTERFACE::PIECE_BLACK_PAWN;
         bufView.nHands[hp]  = this->m_nHands[hs];
     }
 
     for ( int hp = INTERFACE::PIECE_WHITE_PAWN;
-            hp < INTERFACE::PIECE_WHITE_GOLD; ++ hp )
+            hp <= INTERFACE::PIECE_WHITE_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_WHITE_PAWN - INTERFACE::PIECE_WHITE_PAWN;
         bufView.nHands[hp]  = this->m_nHands[hs];
     }
 
 
-    return ( ERR_FAILURE );
+    return ( ERR_SUCCESS );
 }
 
 //========================================================================
