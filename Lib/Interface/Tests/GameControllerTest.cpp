@@ -67,6 +67,42 @@ CPPUNIT_TEST_SUITE_REGISTRATION( GameControllerTest );
 
 void  GameControllerTest::testPlayBackward()
 {
+    GameController  gc;
+    ViewBuffer      vb;
+
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+
+    //  先手  (B3, B2)  [ヒヨコ],   敵ヒヨコ  を取る。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_3, POS_COL_B, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr   ViewBuffer  vb01 = {
+        {
+            PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_WHITE_BISHOP,
+            PIECE_EMPTY,         PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb01, vb, __LINE__ );
+
+    //  先手  (.P, A2) [ヒヨコ],    持ち駒を打つ。      //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playPutAction(POS_COL_A, POS_ROW_2, PIECE_BLACK_PAWN));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr   ViewBuffer  vb02 = {
+        {
+            PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_WHITE_BISHOP,
+            PIECE_BLACK_PAWN,    PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb02, vb, __LINE__ );
 }
 
 void  GameControllerTest::testPlayMoveAction()
