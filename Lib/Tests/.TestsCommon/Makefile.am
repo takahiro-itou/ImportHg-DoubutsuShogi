@@ -50,6 +50,7 @@ TESTXUNITLDFLAGS        =
 AM_CPPFLAGS             =  \
         -I$(TESTEE_SRCDIR)  \
         -I$(INCTOPDIR)      \
+        -I$(SRCTOPDIR)/Lib  \
         -I$(DRIVER_SRCDIR)  \
         $(TEST_CPPFLAGS)
 
