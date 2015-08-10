@@ -18,6 +18,8 @@
 
 #include    "DoubutsuShogi/Interface/GameController.h"
 
+#include    <iostream>
+
 DSHOGI_NAMESPACE_BEGIN
 namespace  INTERFACE  {
 
@@ -52,7 +54,8 @@ private:
     static  void
     checkViewBuffer(
             const  ViewBuffer   vbExp,
-            const  ViewBuffer  &vbAct);
+            const  ViewBuffer  &vbAct,
+            const  int          nLine);
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GameControllerTest );
@@ -68,6 +71,42 @@ void  GameControllerTest::testPlayBackward()
 
 void  GameControllerTest::testPlayMoveAction()
 {
+    GameController  gc;
+    ViewBuffer      vb;
+
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+
+    //  先手  (B3, B2)  [ヒヨコ],   敵ヒヨコ  を取る。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_3, POS_COL_B, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr   ViewBuffer  vb01 = {
+        {
+            PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_WHITE_BISHOP,
+            PIECE_EMPTY,         PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb01, vb, __LINE__ );
+
+    //  後手 (C1, B2) [ゾウ],       敵ヒヨコ  を取る。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_C, POS_ROW_1, POS_COL_B, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr   ViewBuffer  vb02 = {
+        {
+            PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_WHITE_BISHOP,  PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb02, vb, __LINE__ );
 }
 
 void  GameControllerTest::testPlayPutAction()
@@ -84,21 +123,25 @@ void  GameControllerTest::testResetGameBoard()
 
     constexpr   ViewBuffer  vb1 = {
         {
-            PIECE_WHITE_ROOK,  PIECE_WHITE_KING,  PIECE_WHITE_BISHOP,
-            PIECE_EMPTY,  PIECE_WHITE_PAWN,  PIECE_EMPTY,
-            PIECE_EMPTY,  PIECE_BLACK_PAWN,  PIECE_EMPTY,
-            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,  PIECE_BLACK_ROOK
-        }, { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+            PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_WHITE_BISHOP,
+            PIECE_EMPTY,         PIECE_WHITE_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
 
-    checkViewBuffer( vb1, vb );
+    checkViewBuffer( vb1, vb, __LINE__ );
 }
 
 void
 GameControllerTest::checkViewBuffer(
         const  ViewBuffer   vbExp,
-        const  ViewBuffer  &vbAct)
+        const  ViewBuffer  &vbAct,
+        const  int          nLine)
 {
+    (void)(nLine);
+    ////std::cerr   << "CheckViewBuffer : Caller = " << nLine << std::endl;
+
     CPPUNIT_ASSERT_EQUAL(
             vbExp.piBoard[POS_MAT_A1],  vbAct.piBoard[POS_MAT_A1] );
     CPPUNIT_ASSERT_EQUAL(
@@ -159,6 +202,8 @@ GameControllerTest::checkViewBuffer(
     CPPUNIT_ASSERT_EQUAL(
             vbExp.nHands[PIECE_WHITE_GOLD],
             vbAct.nHands[PIECE_WHITE_GOLD]);
+
+    ////std::cerr   << "CheckViewBuffer : OK" << std::endl;
 
     return;
 }

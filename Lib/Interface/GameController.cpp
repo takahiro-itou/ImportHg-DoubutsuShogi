@@ -149,7 +149,7 @@ GameController::playMoveAction(
         const   PosCol  xNewCol,
         const   PosRow  yNewRow)
 {
-    return ( ERR_FAILURE );
+    return ( ERR_SUCCESS );
 }
 
 //----------------------------------------------------------------
