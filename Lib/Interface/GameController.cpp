@@ -149,6 +149,11 @@ GameController::playMoveAction(
         const   PosCol  xNewCol,
         const   PosRow  yNewRow)
 {
+    const   GAME::BoardState::ActionData
+        act = this->m_gcBoard.encodeMoveAction(
+                    xOldCol, yOldRow, xNewCol, yNewRow, 0);
+    this->m_gcBoard.playForward(act);
+
     return ( ERR_SUCCESS );
 }
 

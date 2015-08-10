@@ -52,6 +52,16 @@ s_tblPieceConv[FIELD_WALL_SQUARE + 1]   =
     INTERFACE::NUM_PIECE_TYPES
 };
 
+constexpr   GuardPosCol
+s_tblPosColConv[] = {
+    GPOS_COL_A,  GPOS_COL_B,  GPOS_COL_C
+};
+
+constexpr   GuardPosRow
+s_tblPosRowConv[] = {
+    GPOS_ROW_1,  GPOS_ROW_2,  GPOS_ROW_3,  GPOS_ROW_4
+};
+
 }   //  End of (Unnamed) namespace.
 
 //========================================================================
@@ -70,6 +80,7 @@ s_tblPieceConv[FIELD_WALL_SQUARE + 1]   =
 //
 
 BoardState::BoardState()
+    : m_ibState()
 {
 }
 
@@ -88,30 +99,112 @@ BoardState::~BoardState()
 //
 
 //----------------------------------------------------------------
+//    駒を移動する指し手を内部形式に変換する。
+//
+
+const   BoardState::ActionData
+BoardState::encodeMoveAction(
+        const   PosCol  xOldCol,
+        const   PosRow  yOldRow,
+        const   PosCol  xNewCol,
+        const   PosRow  yNewRow,
+        const   int     bfProm)  const
+{
+    const   ActionData  act = {
+        s_tblPosColConv[xOldCol],
+        s_tblPosRowConv[yOldRow],
+        s_tblPosColConv[xNewCol],
+        s_tblPosRowConv[yNewRow],
+        (bfProm ? 0x04 : 0x00),
+        FIELD_EMPTY_SQUARE
+    };
+
+    return ( act );
+}
+
+//----------------------------------------------------------------
+//    持ち駒を打つ指し手を内部形式に変換する。
+//
+
+const   BoardState::ActionData
+BoardState::encodePutAction(
+        const   PosCol      xPutCol,
+        const   PosRow      yPutRow,
+        const   PieceIndex  pHand)  const
+{
+    const   ActionData  act = {
+    };
+
+    return ( act );
+}
+
+//----------------------------------------------------------------
+//    指定した指し手を取り消して盤面を戻す。
+//
+
+const   BoardState::InternBoard
+BoardState::playBackward(
+        const   ActionData  actBwd)
+{
+    return ( this->m_ibState );
+}
+
+//----------------------------------------------------------------
+//    指定した指し手で盤面を進める。
+//
+
+const   BoardState::InternBoard
+BoardState::playForward(
+        const   ActionData  actFwd)
+{
+    InternBoard  & ibSt = (this->m_ibState);
+
+    //  移動先にある駒を持ち駒にする。  //
+    FieldConst  &
+            fAfter  = ibSt.m_bsField[actFwd.yNewRow][actFwd.xNewCol];
+    ++ ibSt.m_nHands[ (fAfter ^ FIELD_WALL_SQUARE) ];
+
+    //  移動元の駒を移動先へ書き込む。  //
+    if ( actFwd.putHand == FIELD_EMPTY_SQUARE ) {
+        //  盤上の駒を移動させる場合。  //
+        FieldConst  &
+                fBefore = ibSt.m_bsField[actFwd.yOldRow][actFwd.xOldCol];
+        fAfter  = fBefore;
+        fBefore = FIELD_EMPTY_SQUARE;
+    } else {
+        //  持ち駒を打った場合の処理。  //
+    }
+
+    return ( this->m_ibState );
+}
+
+//----------------------------------------------------------------
 //    盤面を初期状態に設定する。
 //
 
 ErrCode
 BoardState::resetGameBoard()
 {
-    for ( int y = 0; y < GPOS_NUM_ROWS; ++ y ) {
-        for ( int x = 0; x < GPOS_NUM_COLS; ++ x ) {
-            this->m_bsField[y][x]   = FIELD_EMPTY_SQUARE;
+    InternBoard  & ibSt = (this->m_ibState);
+
+    for ( int yr = 0; yr < GPOS_NUM_ROWS; ++ yr ) {
+        for ( int xc = 0; xc < GPOS_NUM_COLS; ++ xc ) {
+            ibSt.m_bsField[yr][xc]  = FIELD_EMPTY_SQUARE;
         }
     }
 
-    this->m_bsField[GPOS_ROW_1][GPOS_COL_A] = FIELD_WHITE_ROOK;
-    this->m_bsField[GPOS_ROW_1][GPOS_COL_B] = FIELD_WHITE_KING;
-    this->m_bsField[GPOS_ROW_1][GPOS_COL_C] = FIELD_WHITE_BISHOP;
-    this->m_bsField[GPOS_ROW_2][GPOS_COL_B] = FIELD_WHITE_PAWN;
+    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_A]  = FIELD_WHITE_ROOK;
+    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_B]  = FIELD_WHITE_KING;
+    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_C]  = FIELD_WHITE_BISHOP;
+    ibSt.m_bsField[GPOS_ROW_2][GPOS_COL_B]  = FIELD_WHITE_PAWN;
 
-    this->m_bsField[GPOS_ROW_3][GPOS_COL_B] = FIELD_BLACK_PAWN;
-    this->m_bsField[GPOS_ROW_4][GPOS_COL_A] = FIELD_BLACK_BISHOP;
-    this->m_bsField[GPOS_ROW_4][GPOS_COL_B] = FIELD_BLACK_KING;
-    this->m_bsField[GPOS_ROW_4][GPOS_COL_C] = FIELD_BLACK_ROOK;
+    ibSt.m_bsField[GPOS_ROW_3][GPOS_COL_B]  = FIELD_BLACK_PAWN;
+    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_A]  = FIELD_BLACK_BISHOP;
+    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_B]  = FIELD_BLACK_KING;
+    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_C]  = FIELD_BLACK_ROOK;
 
     for ( int hp = 0; hp < FIELD_WALL_SQUARE; ++ hp ) {
-        this->m_nHands[hp]  = 0;
+        ibSt.m_nHands[hp]   = 0;
     }
 
     return ( ERR_SUCCESS );
@@ -132,9 +225,11 @@ BoardState::copyToViewBuffer(
 {
     using   namespace   INTERFACE;
 
+    const  InternBoard  & ibSt  = (this->m_ibState);
+
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
-            const   FieldConst  fc  = this->m_bsField[y + 1][x + 1];
+            const   FieldConst  fc  = ibSt.m_bsField[y + 1][x + 1];
             bufView.piBoard[y * POS_NUM_COLS + x]   = s_tblPieceConv[fc];
         }
     }
@@ -143,16 +238,15 @@ BoardState::copyToViewBuffer(
             hp <= INTERFACE::PIECE_BLACK_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_BLACK_PAWN - INTERFACE::PIECE_BLACK_PAWN;
-        bufView.nHands[hp]  = this->m_nHands[hs];
+        bufView.nHands[hp]  = ibSt.m_nHands[hs];
     }
 
     for ( int hp = INTERFACE::PIECE_WHITE_PAWN;
             hp <= INTERFACE::PIECE_WHITE_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_WHITE_PAWN - INTERFACE::PIECE_WHITE_PAWN;
-        bufView.nHands[hp]  = this->m_nHands[hs];
+        bufView.nHands[hp]  = ibSt.m_nHands[hs];
     }
-
 
     return ( ERR_SUCCESS );
 }

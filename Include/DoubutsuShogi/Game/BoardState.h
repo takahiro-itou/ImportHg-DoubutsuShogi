@@ -39,6 +39,37 @@ class  BoardState
 
 //========================================================================
 //
+//    Internal Types.
+//
+public:
+
+    /**   盤面データの内部形式の型。    **/
+    struct  InternBoard
+    {
+        /**   盤上の状態。  **/
+        FieldConst      m_bsField[GPOS_NUM_ROWS][GPOS_NUM_COLS];
+
+        /**   持ち駒の数。  **/
+        int             m_nHands [FIELD_WALL_SQUARE];
+    };
+
+    /**   指し手データの内部形式の型。  **/
+    struct  ActionData
+    {
+        GuardPosCol     xOldCol;
+        GuardPosRow     yOldRow;
+        GuardPosCol     xNewCol;
+        GuardPosRow     yNewRow;
+        int             blnProm;
+        FieldConst      putHand;
+    };
+
+private:
+    /**   駒の種類を表す定数。  **/
+    typedef     INTERFACE::PieceIndex   PieceIndex;
+
+//========================================================================
+//
 //    Constructor(s) and Destructor.
 //
 public:
@@ -62,6 +93,58 @@ public:
 //    Public Member Functions.
 //
 public:
+
+    //----------------------------------------------------------------
+    /**   駒を移動する指し手を内部形式に変換する。
+    **
+    **  @param [in] xOldCol   移動元の座標（横方向）。
+    **  @param [in] yOldRow   移動元の座標（縦方向）。
+    **  @param [in] xNewCol   移動先の座標（横方向）。
+    **  @param [in] yNewRow   移動先の座標（縦方向）。
+    **  @param [in] bfProm    成る場合は非ゼロ値。
+    **  @return     指し手の内部形式。
+    **/
+    const   ActionData
+    encodeMoveAction(
+            const   PosCol  xOldCol,
+            const   PosRow  yOldRow,
+            const   PosCol  xNewCol,
+            const   PosRow  yNewRow,
+            const   int     bfProm)  const;
+
+    //----------------------------------------------------------------
+    /**   持ち駒を打つ指し手を内部形式に変換する。
+    **
+    **  @param [in] xPutCol   駒を打つ座標（横方向）。
+    **  @param [in] yPutRow   駒を打つ座標（縦方向）。
+    **  @param [in] pHand     打つ駒の種類。
+    **  @return     指し手の内部形式。
+    **/
+    const   ActionData
+    encodePutAction(
+            const   PosCol      xPutCol,
+            const   PosRow      yPutRow,
+            const   PieceIndex  pHand)  const;
+
+    //----------------------------------------------------------------
+    /**   指定した指し手を取り消して盤面を戻す。
+    **
+    **  @param [in] actBwd    指し手データの内部形式。
+    **  @return     戻した盤面を返す。
+    **/
+    const   InternBoard
+    playBackward(
+            const   ActionData  actBwd);
+
+    //----------------------------------------------------------------
+    /**   指定した指し手で盤面を進める。
+    **
+    **  @param [in] actFwd    指し手データの内部形式。
+    **  @return     進めた盤面を返す。
+    **/
+    const   InternBoard
+    playForward(
+            const   ActionData  actFwd);
 
     //----------------------------------------------------------------
     /**   盤面を初期状態に設定する。
@@ -93,6 +176,17 @@ public:
     copyToViewBuffer(
             INTERFACE::ViewBuffer  &bufView)  const;
 
+    //----------------------------------------------------------------
+    /**   現在の盤面を内部形式で取得する。
+    **
+    **  @return     現在の盤面の状態。
+    **/
+    const   InternBoard
+    getCurrentState()  const
+    {
+        return ( this->m_ibState );
+    }
+
 //========================================================================
 //
 //    For Internal Use Only.
@@ -104,11 +198,8 @@ public:
 //
 private:
 
-    /**   盤上の状態。  **/
-    FieldConst      m_bsField[GPOS_NUM_ROWS][GPOS_NUM_COLS];
-
-    /**   持ち駒の数。  **/
-    int             m_nHands [FIELD_WALL_SQUARE];
+    /**   現在の盤面。  **/
+    InternBoard     m_ibState;
 
 //========================================================================
 //
