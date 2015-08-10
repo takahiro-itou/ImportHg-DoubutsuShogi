@@ -9,7 +9,9 @@ AC_INIT(
 
 AC_CONFIG_AUX_DIR([.config])
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(
+    [serial-tests]
+)
 
 AC_CONFIG_SRCDIR([Bin/DoubutsuShogi.cpp])
 AC_CONFIG_HEADERS([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
