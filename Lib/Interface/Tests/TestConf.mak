@@ -5,6 +5,7 @@
 
 EXTRATESTS              =
 TESTS                   =  \
+        GameControllerTest  \
         $(EXTRATESTS)
 
 ##
@@ -12,7 +13,8 @@ TESTS                   =  \
 ##
 
 TESTCPPFLAGS            +=
-TESTLDFLAGS             +=  ../libdsgInterface.staticd.a
+TESTLDFLAGS             +=
+TESTLIBTESTEE           +=  -ldsgInterface
 
 ##
 ##    Test Configurations.
@@ -21,4 +23,6 @@ TESTLDFLAGS             +=  ../libdsgInterface.staticd.a
 ##
 ##    Test Programs.
 ##
+
+GameControllerTest_SOURCES  =  GameControllerTest.cpp
 
