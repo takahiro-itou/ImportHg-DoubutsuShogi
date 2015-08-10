@@ -48,6 +48,11 @@ private:
     void  testPlayMoveAction();
     void  testPlayPutAction();
     void  testResetGameBoard();
+
+    static  void
+    checkViewBuffer(
+            const  ViewBuffer   vbExp,
+            const  ViewBuffer  &vbAct);
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GameControllerTest );
@@ -77,33 +82,85 @@ void  GameControllerTest::testResetGameBoard()
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
 
-    CPPUNIT_ASSERT_EQUAL( PIECE_WHITE_ROOK,     vb.piBoard[POS_MAT_A1] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_WHITE_KING,     vb.piBoard[POS_MAT_B1] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_WHITE_BISHOP,   vb.piBoard[POS_MAT_C1] );
+    constexpr   ViewBuffer  vb1 = {
+        {
+            PIECE_WHITE_ROOK,  PIECE_WHITE_KING,  PIECE_WHITE_BISHOP,
+            PIECE_EMPTY,  PIECE_WHITE_PAWN,  PIECE_EMPTY,
+            PIECE_EMPTY,  PIECE_BLACK_PAWN,  PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,  PIECE_BLACK_ROOK
+        }, { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
 
-    CPPUNIT_ASSERT_EQUAL( PIECE_EMPTY,          vb.piBoard[POS_MAT_A2] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_WHITE_PAWN,     vb.piBoard[POS_MAT_B2] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_EMPTY,          vb.piBoard[POS_MAT_C2] );
+    checkViewBuffer( vb1, vb );
+}
 
-    CPPUNIT_ASSERT_EQUAL( PIECE_EMPTY,          vb.piBoard[POS_MAT_A3] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_BLACK_PAWN,     vb.piBoard[POS_MAT_B3] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_EMPTY,          vb.piBoard[POS_MAT_C3] );
+void
+GameControllerTest::checkViewBuffer(
+        const  ViewBuffer   vbExp,
+        const  ViewBuffer  &vbAct)
+{
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_A1],  vbAct.piBoard[POS_MAT_A1] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_B1],  vbAct.piBoard[POS_MAT_B1] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_C1],  vbAct.piBoard[POS_MAT_C1] );
 
-    CPPUNIT_ASSERT_EQUAL( PIECE_BLACK_BISHOP,   vb.piBoard[POS_MAT_A4] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_BLACK_KING,     vb.piBoard[POS_MAT_B4] );
-    CPPUNIT_ASSERT_EQUAL( PIECE_BLACK_ROOK,     vb.piBoard[POS_MAT_C4] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_A2],  vbAct.piBoard[POS_MAT_A2] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_B2],  vbAct.piBoard[POS_MAT_B2] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_C2],  vbAct.piBoard[POS_MAT_C2] );
 
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_BLACK_PAWN]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_BLACK_BISHOP] );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_BLACK_ROOK]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_BLACK_KING]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_BLACK_GOLD]   );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_A3],  vbAct.piBoard[POS_MAT_A3] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_B3],  vbAct.piBoard[POS_MAT_B3] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_C3],  vbAct.piBoard[POS_MAT_C3] );
 
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_WHITE_PAWN]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_WHITE_BISHOP] );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_WHITE_ROOK]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_WHITE_KING]   );
-    CPPUNIT_ASSERT_EQUAL( 0,    vb.nHands[PIECE_WHITE_GOLD]   );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_A4],  vbAct.piBoard[POS_MAT_A4] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_B4],  vbAct.piBoard[POS_MAT_B4] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.piBoard[POS_MAT_C4],  vbAct.piBoard[POS_MAT_C4] );
+
+
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_BLACK_PAWN],
+            vbAct.nHands[PIECE_BLACK_PAWN] );
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_BLACK_BISHOP],
+            vbAct.nHands[PIECE_BLACK_BISHOP]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_BLACK_ROOK],
+            vbAct.nHands[PIECE_BLACK_ROOK]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_BLACK_KING],
+            vbAct.nHands[PIECE_BLACK_KING]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_BLACK_GOLD],
+            vbAct.nHands[PIECE_BLACK_GOLD]);
+
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_WHITE_PAWN],
+            vbAct.nHands[PIECE_WHITE_PAWN]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_WHITE_BISHOP],
+            vbAct.nHands[PIECE_WHITE_BISHOP]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_WHITE_ROOK],
+            vbAct.nHands[PIECE_WHITE_ROOK]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_WHITE_KING],
+            vbAct.nHands[PIECE_WHITE_KING]);
+    CPPUNIT_ASSERT_EQUAL(
+            vbExp.nHands[PIECE_WHITE_GOLD],
+            vbAct.nHands[PIECE_WHITE_GOLD]);
+
+    return;
 }
 
 }   //  End of namespace  INTERFACE
