@@ -38,6 +38,7 @@ class  GameControllerTest : public  CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(testPlayForward);
     CPPUNIT_TEST(testPlayMoveAction);
     CPPUNIT_TEST(testPlayPutAction);
+    CPPUNIT_TEST(testPromotion);
     CPPUNIT_TEST(testResetGameBoard);
     CPPUNIT_TEST_SUITE_END();
 
@@ -51,6 +52,7 @@ private:
     void  testPlayForward();
     void  testPlayMoveAction();
     void  testPlayPutAction();
+    void  testPromotion();
     void  testResetGameBoard();
 
     static  void
@@ -515,6 +517,93 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     0, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb06, vb, __LINE__ );
+
+    return;
+}
+
+void  GameControllerTest::testPromotion()
+{
+    GameController  gc;
+    ViewBuffer      vb;
+
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+
+    //  先手  (B3, B2)  [ ヒヨコ ]  敵ヒヨコ  を取る。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_3, POS_COL_B, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr  ViewBuffer  vb01 = {
+        {   PIECE_WHITE_ROOK,    PIECE_WHITE_KING,    PIECE_WHITE_BISHOP,
+            PIECE_EMPTY,         PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb01, vb, __LINE__ );
+
+    //  後手  (B1, A2)  [ライオン]  捕獲した駒は無し。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_1, POS_COL_A, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr  ViewBuffer  vb02 = {
+        {   PIECE_WHITE_ROOK,    PIECE_EMPTY,         PIECE_WHITE_BISHOP,
+            PIECE_WHITE_KING,    PIECE_BLACK_PAWN,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb02, vb, __LINE__ );
+
+    //  先手  (B2, B1)  [ヒヨコ成]  捕獲した駒は無し。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_2, POS_COL_B, POS_ROW_1));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr  ViewBuffer  vb03 = {
+        {   PIECE_WHITE_ROOK,    PIECE_BLACK_GOLD,    PIECE_WHITE_BISHOP,
+            PIECE_WHITE_KING,    PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb03, vb, __LINE__ );
+
+    //  テストなので、先手番だけ処理する。              //
+    //  先手  (B1, B2)  [ニワトリ]  捕獲した駒は無し。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playMoveAction(POS_COL_B, POS_ROW_1, POS_COL_B, POS_ROW_2));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr  ViewBuffer  vb04 = {
+        {   PIECE_WHITE_ROOK,    PIECE_EMPTY,         PIECE_WHITE_BISHOP,
+            PIECE_WHITE_KING,    PIECE_BLACK_GOLD,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb04, vb, __LINE__ );
+
+    //  先手  (.P, B1)  [ ヒヨコ ]  持ち駒を打つ。      //
+    //  持ち駒を打つ場合は、成り駒で打ってはいけない。  //
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS,
+            gc.playPutAction(POS_COL_B, POS_ROW_1, PIECE_BLACK_PAWN));
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
+
+    constexpr  ViewBuffer  vb05 = {
+        {   PIECE_WHITE_ROOK,    PIECE_BLACK_PAWN,    PIECE_WHITE_BISHOP,
+            PIECE_WHITE_KING,    PIECE_BLACK_GOLD,    PIECE_EMPTY,
+            PIECE_EMPTY,         PIECE_EMPTY,         PIECE_EMPTY,
+            PIECE_BLACK_BISHOP,  PIECE_BLACK_KING,    PIECE_BLACK_ROOK
+        }, { 0,     0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
+    };
+    checkViewBuffer( vb05, vb, __LINE__ );
 
     return;
 }
