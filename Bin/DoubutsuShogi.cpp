@@ -109,8 +109,11 @@ int  main(int argc, char * argv[])
 
     while ( 1 ) {
         gc.writeToStream(std::cout) << std::endl;
-        std::cout   << "指し手を入力してください（? でヘルプ）：";
+        std::cout   << (nPlayer ? "後手" : "先手")
+                    << "の手番です。\n"
+                    << "指し手を入力してください（? でヘルプ）：";
         isCnsl      >> strLine;
+
         if ( strLine[0] == 'q' ) {
             //  プログラムを終了する。  //
             break;
@@ -148,7 +151,8 @@ int  main(int argc, char * argv[])
             }
             gc.playMoveAction(xOldCol, yOldRow, xNewCol, yNewRow);
         }
-
+        //  手番を交代する。    //
+        nPlayer = (nPlayer + 1) & 1;
     }
 
     return ( 0 );
