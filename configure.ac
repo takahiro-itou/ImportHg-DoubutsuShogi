@@ -3,13 +3,15 @@ AC_PREREQ([2.69])
 
 AC_INIT(
     [DoubutsuShogi],
-    [1.0.43],
+    [1.0.81],
     [BUG-REPORT-ADDRESS],
     [DoubutsuShogi])
 
 AC_CONFIG_AUX_DIR([.config])
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(
+    [serial-tests]
+)
 
 AC_CONFIG_SRCDIR([Bin/DoubutsuShogi.cpp])
 AC_CONFIG_HEADERS([Include/.DoubutsuShogi.config.h:Include/DoubutsuShogi/.Config/Config.h.in])
@@ -60,6 +62,7 @@ AC_CONFIG_FILES([
     Lib/Makefile
     Lib/.Config/Makefile
     Lib/Common/Makefile
+    Lib/Game/Makefile
     Lib/Interface/Makefile
 ])
 
@@ -67,6 +70,7 @@ AC_CONFIG_FILES([
     Include/DoubutsuShogi/.Config/ConfiguredDoubutsuShogi.h
 ])
 
+AC_CONFIG_FILES([Lib/libdsgGame.a:Lib/.LinkerScript/dsgGame.in])
 AC_CONFIG_FILES([Lib/libdsgInterface.a:Lib/.LinkerScript/dsgInterface.in])
 
 dnl
@@ -74,6 +78,7 @@ dnl   Test Festures.
 dnl
 
 AC_CONFIG_FILES([
+    Lib/Game/Tests/Makefile
     Lib/Interface/Tests/Makefile
     Lib/Tests/Makefile
 ])

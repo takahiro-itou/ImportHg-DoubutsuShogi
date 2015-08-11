@@ -1,8 +1,28 @@
 
-TESTS  =  \
-    GameControllerTest
+##
+##    List of Tests.
+##
 
-LDADD  =  ../libdsgGame.staticd.a
+EXTRATESTS              =
+TESTS                   =  \
+        BoardStateTest     \
+        $(EXTRATESTS)
 
-GameControllerTest_SOURCES  =  GameControllerTest.cpp
+##
+##    Compile and Link Options.
+##
+
+TESTCPPFLAGS            +=
+TESTLDFLAGS             +=
+TESTLIBTESTEE           +=  -ldsgGame
+
+##
+##    Test Configurations.
+##
+
+##
+##    Test Programs.
+##
+
+BoardStateTest_SOURCES  =  BoardStateTest.cpp
 

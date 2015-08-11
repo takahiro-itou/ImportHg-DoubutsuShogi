@@ -9,13 +9,13 @@
 *************************************************************************/
 
 /**
-**      An Interface of GameStatus class.
+**      An Interface of ViewBuffer class.
 **
-**      @file       Interface/GameStatus.h
+**      @file       Interface/ViewBuffer.h
 **/
 
-#if !defined( DSHOGI_INTERFACE_INCLUDED_GAME_STATUS_H )
-#    define   DSHOGI_INTERFACE_INCLUDED_GAME_STATUS_H
+#if !defined( DSHOGI_INTERFACE_INCLUDED_VIEW_BUFFER_H )
+#    define   DSHOGI_INTERFACE_INCLUDED_VIEW_BUFFER_H
 
 #include    "DoubutsuShogi/Common/DoubutsuShogiTypes.h"
 
@@ -48,10 +48,10 @@ enum  PieceIndex
 
 //----------------------------------------------------------------
 /**
-**    ゲーム管理構造体。
+**    ゲームの局面を表示するためのバッファ構造体。
 **/
 
-struct  GameStatus
+struct  ViewBuffer
 {
     PieceIndex  piBoard[POS_MATRIX_SIZE];       /**<  盤上の状態。  **/
     int         nHands [NUM_PIECE_TYPES];       /**<  持ち駒の数。  **/

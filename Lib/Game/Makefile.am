@@ -8,7 +8,7 @@ SUBDIRS                 =  .  Tests
 SRCTOPDIR               =  @top_srcdir@
 INCTOPDIR               =  $(SRCTOPDIR)/Include
 INCPKGDIR               =  $(INCTOPDIR)/DoubutsuShogi
-INCLIBDIR               =  $(INCPKGDIR)/Interface
+INCLIBDIR               =  $(INCPKGDIR)/Game
 
 ##
 ##    List of Source and Header Files.
@@ -19,7 +19,7 @@ EXTRANOINSTHEADERS      =
 EXTRALIBHEADERS         =
 
 LIBCXXSOURCEFILES       =  \
-        GameController.cpp  \
+        BoardState.cpp      \
         $(EXTRALIBSOURCES)
 
 LIBINSTANTIATIONS       =
@@ -29,8 +29,8 @@ LIBNOINSTHEADERS        =  \
         $(EXTRANOINSTHEADERS)
 
 INCLIBHEADERS           =  \
-        $(INCLIBDIR)/GameController.h  \
-        $(INCLIBDIR)/ViewBuffer.h      \
+        $(INCLIBDIR)/BoardState.h     \
+        $(INCLIBDIR)/InternalTypes.h  \
         $(EXTRALIBHEADERS)
 
 LIBNODISTHEADERS        =
@@ -42,7 +42,7 @@ LIBCOMPILESOURCES       =  $(LIBCXXSOURCEFILES)  $(LIBINSTANTIATIONS)
 ##    List of Libraries.
 ##
 
-LIB_STATIC              =  libdsgInterface.staticd.a
+LIB_STATIC              =  libdsgGame.staticd.a
 LIB_SHARED              =
 
 ##
@@ -65,19 +65,19 @@ AM_CXXFLAGS             =
 ##    List of Installs.
 ##
 
-dshogi_includedir                 =  $(includedir)/DoubutsuShogi
-dshogi_interface_includedir       =  $(dshogi_includedir)/Interface
-dshogi_interface_include_HEADERS  =  $(INCLIBHEADERS)
-dist_noinst_HEADERS               =  $(LIBNOINSTHEADERS)
+dshogi_includedir            =  $(includedir)/DoubutsuShogi
+dshogi_game_includedir       =  $(dshogi_includedir)/Game
+dshogi_game_include_HEADERS  =  $(INCLIBHEADERS)
+dist_noinst_HEADERS          =  $(LIBNOINSTHEADERS)
 
-dshogi_libdir                     =  $(libdir)
-dshogi_interface_libdir           =  $(dshogi_libdir)/Interface
-dshogi_interface_lib_LTLIBRARIES  =  $(LIB_SHARED)
-dshogi_interface_lib_LIBRARIES    =  $(LIB_STATIC)
+dshogi_libdir                =  $(libdir)
+dshogi_game_libdir           =  $(dshogi_libdir)/Game
+dshogi_game_lib_LTLIBRARIES  =  $(LIB_SHARED)
+dshogi_game_lib_LIBRARIES    =  $(LIB_STATIC)
 
 ##
 ##    Build Libraries.
 ##
 
-libdsgInterface_staticd_a_SOURCES   =  $(LIBCOMPILESOURCES)
+libdsgGame_staticd_a_SOURCES   =  $(LIBCOMPILESOURCES)
 

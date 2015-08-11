@@ -3,17 +3,18 @@
 ##    List of Tests.
 ##
 
-EXTRATESTS          =
-TESTS               =  \
+EXTRATESTS              =
+TESTS                   =  \
+        GameControllerTest  \
         $(EXTRATESTS)
 
 ##
 ##    Compile and Link Options.
 ##
 
-TESTCPPFLAGS        =
-TESTLDFLAGS         =
-LDADD               =  ../libdsgInterface.staticd.a
+TESTCPPFLAGS            +=
+TESTLDFLAGS             +=
+TESTLIBTESTEE           +=  -ldsgInterface
 
 ##
 ##    Test Configurations.
@@ -22,4 +23,6 @@ LDADD               =  ../libdsgInterface.staticd.a
 ##
 ##    Test Programs.
 ##
+
+GameControllerTest_SOURCES  =  GameControllerTest.cpp
 
