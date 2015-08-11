@@ -28,7 +28,7 @@ TESTLDFLAGS             =
 ##    Test Configurations.
 ##
 
-include  @srcdir@/TestConf.mak
+include  $(srcdir)/TestConf.mak
 
 ##
 ##    List of Source and Header Files.
