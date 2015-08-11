@@ -60,7 +60,9 @@ public:
         GuardPosRow     yOldRow;
         GuardPosCol     xNewCol;
         GuardPosRow     yNewRow;
-        int             blnProm;
+        FieldConst      fpCatch;    /**<  捕まえた駒。  **/
+        FieldConst      fpMoved;    /**<  移動した駒。  **/
+        FieldConst      fpAfter;    /**<  移動後成り。  **/
         FieldConst      putHand;
     };
 

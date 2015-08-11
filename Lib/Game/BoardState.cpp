@@ -16,6 +16,8 @@
 
 #include    "DoubutsuShogi/Game/BoardState.h"
 
+#include    <stdexcept>
+
 DSHOGI_NAMESPACE_BEGIN
 namespace  GAME  {
 
@@ -144,12 +146,40 @@ BoardState::encodeMoveAction(
         const  PosRow       yNewRow,
         const  PromoteFlag  flgProm)
 {
-    const   ActionData  act = {
-        s_tblPosColConv[xOldCol],
-        s_tblPosRowConv[yOldRow],
-        s_tblPosColConv[xNewCol],
-        s_tblPosRowConv[yNewRow],
-        (flgProm ? 0x04 : 0x00),
+    const  GuardPosCol  gOX = s_tblPosColConv[xOldCol];
+    const  GuardPosRow  gOY = s_tblPosRowConv[yOldRow];
+    const  GuardPosCol  gNX = s_tblPosColConv[xNewCol];
+    const  GuardPosRow  gNY = s_tblPosRowConv[yNewRow];
+    const  FieldConst   tmp = curStat.m_bsField[gOY][gOX];
+
+    FieldConst  prm = tmp;
+
+    //  成れるかどうかを判定する。  //
+    if ( (tmp == FIELD_BLACK_PAWN) && (yNewRow == POS_ROW_1) ) {
+        prm = FIELD_BLACK_GOLD;
+    } else if ( (tmp == FIELD_WHITE_PAWN) && (yNewRow == POS_ROW_4) ) {
+        prm = FIELD_WHITE_GOLD;
+    }
+
+    //  成りフラグをチェックする。  //
+    if ( flgProm == ACT_NO_PROMOTION ) {
+        //  成れる場合でも成らない。    //
+        prm = tmp;
+    } else if ( flgProm == ACT_PROMOTION ) {
+        //  成れない場合にこのフラグが指定された場合はエラー。  //
+        if ( prm == tmp ) {
+            throw  std::runtime_error("Invalid Promotion");
+        }
+    } else {
+        //  成れる場合には自動で成る。  //
+    }
+
+    const  ActionData   act = {
+        gOX,    gOY,
+        gNX,    gNY,
+        curStat.m_bsField[gNY][gNX],
+        tmp,
+        prm,
         FIELD_EMPTY_SQUARE
     };
 
@@ -180,11 +210,17 @@ BoardState::encodePutAction(
         const  PosRow       yPutRow,
         const  PieceIndex   pHand)
 {
-    const   ActionData  act = {
-        GPOS_COL_L,  GPOS_ROW_U,
+    const  FieldConst   fcHand  = s_tblHandConv[pHand];
+
+    const  ActionData   act = {
+        GPOS_COL_L,
+        GPOS_ROW_U,
         s_tblPosColConv[xPutCol],
         s_tblPosRowConv[yPutRow],
-        0, s_tblHandConv[pHand]
+        FIELD_EMPTY_SQUARE,
+        FIELD_EMPTY_SQUARE,
+        fcHand,
+        fcHand
     };
 
     return ( act );
@@ -211,22 +247,20 @@ BoardState::playForward(
 {
     InternBoard  & ibSt = (this->m_ibState);
 
-    //  移動先にある駒を持ち駒にする。  //
-    FieldConst  &
-            fAfter  = ibSt.m_bsField[actFwd.yNewRow][actFwd.xNewCol];
-    ++ ibSt.m_nHands[ (fAfter ^ FIELD_WALL_SQUARE) ];
+    //  移動元のマスを空きマスにする。  //
+    ibSt.m_bsField[actFwd.yOldRow][actFwd.xOldCol]  = FIELD_EMPTY_SQUARE;
 
-    //  移動元の駒を移動先へ書き込む。  //
-    if ( actFwd.putHand == FIELD_EMPTY_SQUARE ) {
-        //  盤上の駒を移動させる場合。  //
-        FieldConst  &
-                fBefore = ibSt.m_bsField[actFwd.yOldRow][actFwd.xOldCol];
-        fAfter  = fBefore;
-        fBefore = FIELD_EMPTY_SQUARE;
-    } else {
-        //  持ち駒を打った場合の処理。  //
+    //  移動先に指定した駒を書き込む。  //
+    ibSt.m_bsField[actFwd.yNewRow][actFwd.xNewCol]  = actFwd.fpAfter;
+
+    //  取った相手の駒を持ち駒にする。  //
+    if ( actFwd.fpCatch != FIELD_EMPTY_SQUARE ) {
+        ++ ibSt.m_nHands[(actFwd.fpCatch ^ FIELD_WALL_SQUARE)];
+    }
+
+    //  駒を打つ場合は持ち駒を減らす。  //
+    if ( actFwd.putHand != FIELD_EMPTY_SQUARE ) {
         -- ibSt.m_nHands[actFwd.putHand];
-        fAfter  = actFwd.putHand;
     }
 
     return ( this->m_ibState );
