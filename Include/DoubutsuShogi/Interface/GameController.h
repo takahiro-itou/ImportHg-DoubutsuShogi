@@ -113,6 +113,7 @@ public:
     **  @param [in] yOldRow   移動元の座標（縦方向）。
     **  @param [in] xNewCol   移動先の座標（横方向）。
     **  @param [in] yNewRow   移動先の座標（縦方向）。
+    **  @param [in] flgProm   駒の成り、又は、不成り。
     **  @return     エラーコードを返す。
     **      -   異常終了の場合は、
     **          エラーの種類を示す非ゼロ値を返す。
@@ -120,10 +121,11 @@ public:
     **/
     virtual  ErrCode
     playMoveAction(
-            const   PosCol  xOldCol,
-            const   PosRow  yOldRow,
-            const   PosCol  xNewCol,
-            const   PosRow  yNewRow);
+            const  PosCol       xOldCol,
+            const  PosRow       yOldRow,
+            const  PosCol       xNewCol,
+            const  PosRow       yNewRow,
+            const  PromoteFlag  flgProm = ACT_AUTO_PROMOTION);
 
     //----------------------------------------------------------------
     /**   持ち駒を打つ指し手を入力して盤面を進める。

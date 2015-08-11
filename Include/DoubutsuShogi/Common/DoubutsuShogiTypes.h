@@ -97,6 +97,18 @@ enum  PosMat
     POS_MATRIX_SIZE     /**<  盤上のマスの数。  **/
 };
 
+//----------------------------------------------------------------
+/**
+**    指し手（成り、不成り）を入力するための列挙型。
+**/
+
+enum    PromoteFlag
+{
+    ACT_NO_PROMOTION    = 0,
+    ACT_PROMOTION       = 1,
+    ACT_AUTO_PROMOTION  = 2
+};
+
 DSHOGI_NAMESPACE_END
 
 #endif

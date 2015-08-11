@@ -144,10 +144,11 @@ GameController::playBackward()
 
 ErrCode
 GameController::playMoveAction(
-        const   PosCol  xOldCol,
-        const   PosRow  yOldRow,
-        const   PosCol  xNewCol,
-        const   PosRow  yNewRow)
+        const  PosCol       xOldCol,
+        const  PosRow       yOldRow,
+        const  PosCol       xNewCol,
+        const  PosRow       yNewRow,
+        const  PromoteFlag  flgProm)
 {
     const   GAME::BoardState::ActionData
         act = this->m_gcBoard.encodeMoveAction(
