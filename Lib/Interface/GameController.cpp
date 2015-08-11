@@ -205,6 +205,7 @@ GameController::writeToStream(
         }
     }
 
+    strOut  << "\n   A     B     C";
     strOut  << "\n┌──┬──┬──┐\n";
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         if ( y > 0 ) {
@@ -215,7 +216,7 @@ GameController::writeToStream(
             const  int  nPiece  = (bufView.piBoard[posIdx]);
             strOut  << "│" << s_tblPieceName[nPiece];
         }
-        strOut  << "│\n";
+        strOut  << "│" << (y + 1) << "\n";
     }
     strOut  << "└──┴──┴──┘\n";
 

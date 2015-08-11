@@ -109,7 +109,8 @@ int  main(int argc, char * argv[])
 
     while ( 1 ) {
         gc.writeToStream(std::cout) << std::endl;
-        std::cout   << (nPlayer ? "後手" : "先手")
+        std::cout   << "\n"
+                    << (nPlayer ? "後手" : "先手")
                     << "の手番です。\n"
                     << "指し手を入力してください（? でヘルプ）：";
         isCnsl      >> strLine;
