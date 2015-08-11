@@ -119,18 +119,37 @@ BoardState::~BoardState()
 
 const   BoardState::ActionData
 BoardState::encodeMoveAction(
-        const   PosCol  xOldCol,
-        const   PosRow  yOldRow,
-        const   PosCol  xNewCol,
-        const   PosRow  yNewRow,
-        const   int     bfProm)  const
+        const  PosCol       xOldCol,
+        const  PosRow       yOldRow,
+        const  PosCol       xNewCol,
+        const  PosRow       yNewRow,
+        const  PromoteFlag  flgProm)  const
+{
+    return ( encodeMoveAction(
+                     this->m_ibState,
+                     xOldCol, yOldRow, xNewCol, yNewRow,
+                     flgProm) );
+}
+
+//----------------------------------------------------------------
+//    駒を移動する指し手を内部形式に変換する。
+//
+
+const   BoardState::ActionData
+BoardState::encodeMoveAction(
+        const  InternBoard  curStat,
+        const  PosCol       xOldCol,
+        const  PosRow       yOldRow,
+        const  PosCol       xNewCol,
+        const  PosRow       yNewRow,
+        const  PromoteFlag  flgProm)
 {
     const   ActionData  act = {
         s_tblPosColConv[xOldCol],
         s_tblPosRowConv[yOldRow],
         s_tblPosColConv[xNewCol],
         s_tblPosRowConv[yNewRow],
-        (bfProm ? 0x04 : 0x00),
+        (flgProm ? 0x04 : 0x00),
         FIELD_EMPTY_SQUARE
     };
 
@@ -146,6 +165,20 @@ BoardState::encodePutAction(
         const   PosCol      xPutCol,
         const   PosRow      yPutRow,
         const   PieceIndex  pHand)  const
+{
+    return ( encodePutAction(this->m_ibState, xPutCol, yPutRow, pHand) );
+}
+
+//----------------------------------------------------------------
+//    持ち駒を打つ指し手を内部形式に変換する。
+//
+
+const   BoardState::ActionData
+BoardState::encodePutAction(
+        const  InternBoard  curStat,
+        const  PosCol       xPutCol,
+        const  PosRow       yPutRow,
+        const  PieceIndex   pHand)
 {
     const   ActionData  act = {
         GPOS_COL_L,  GPOS_ROW_U,

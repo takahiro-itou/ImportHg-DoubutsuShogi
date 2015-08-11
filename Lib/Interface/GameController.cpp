@@ -152,7 +152,7 @@ GameController::playMoveAction(
 {
     const   GAME::BoardState::ActionData
         act = this->m_gcBoard.encodeMoveAction(
-                    xOldCol, yOldRow, xNewCol, yNewRow, 0);
+                    xOldCol, yOldRow, xNewCol, yNewRow, flgProm);
     this->m_gcBoard.playForward(act);
 
     return ( ERR_SUCCESS );
