@@ -24,6 +24,16 @@ namespace  INTERFACE  {
 namespace  {
 
 /**
+**    手番を交代する処理に使うテーブル。
+**/
+
+constexpr   TurnPlayer
+s_tblNextPlayerTable[]  = {
+    TURN_2ND_PLAYER,
+    TURN_1ST_PLAYER
+};
+
+/**
 **    画面表示の処理時に参照する座標の変換表。
 **/
 
@@ -151,10 +161,17 @@ GameController::playMoveAction(
         const  PosRow       yNewRow,
         const  PromoteFlag  flgProm)
 {
-    const   GAME::BoardState::ActionData
+    const  GAME::BoardState::ActionData
         act = this->m_gcBoard.encodeMoveAction(
                     xOldCol, yOldRow, xNewCol, yNewRow, flgProm);
+
+    const  ErrCode  retErr  = this->m_gcBoard.isLegalAction(act);
+    if ( retErr != ERR_SUCCESS ) {
+        return ( retErr );
+    }
+
     this->m_gcBoard.playForward(act);
+    this->m_curMove = s_tblNextPlayerTable[this->m_curMove];
 
     return ( ERR_SUCCESS );
 }
@@ -172,7 +189,14 @@ GameController::playPutAction(
     const   GAME::BoardState::ActionData
         act = this->m_gcBoard.encodePutAction(
                     xPutCol, yPutRow, pHand);
+
+    const  ErrCode  retErr  = this->m_gcBoard.isLegalAction(act);
+    if ( retErr != ERR_SUCCESS ) {
+        return ( retErr );
+    }
+
     this->m_gcBoard.playForward(act);
+    this->m_curMove = s_tblNextPlayerTable[this->m_curMove];
 
     return ( ERR_SUCCESS );
 }
