@@ -29,6 +29,17 @@
 DSHOGI_NAMESPACE_BEGIN
 namespace  INTERFACE  {
 
+//----------------------------------------------------------------
+/**
+**    現在の手番を管理する列挙型。
+**/
+
+enum  TurnPlayer
+{
+    TURN_1ST_PLAYER     = 0,
+    TURN_2ND_PLAYER     = 1
+};
+
 //========================================================================
 //
 //    GameController  class.
@@ -140,9 +151,9 @@ public:
     **/
     virtual  ErrCode
     playPutAction(
-            const   PosCol      xPutCol,
-            const   PosRow      yPutRow,
-            const   PieceIndex  pHand);
+            const  PosCol       xPutCol,
+            const  PosRow       yPutRow,
+            const  PieceIndex   pHand);
 
     //----------------------------------------------------------------
     /**   盤面を初期状態に設定する。
@@ -187,6 +198,31 @@ public:
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   手番を持っているプレーヤーを取得する。
+    **
+    **  @return     現在の手番を返す。
+    **/
+    TurnPlayer
+    getTurnPlayer()  const
+    {
+        return ( this->m_curMove );
+    }
+
+    //----------------------------------------------------------------
+    /**   手番を持っているプレーヤーを設定する。
+    **
+    **  @param [in] curMove   設定する値。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    setTurnPlayer(
+            const  TurnPlayer   curMove);
 
 //========================================================================
 //
@@ -199,8 +235,11 @@ public:
 //
 private:
 
-    /**   盤面の状態。      **/
+    /**   盤面の状態。  **/
     GAME::BoardState    m_gcBoard;
+
+    /**   現在の手番。  **/
+    TurnPlayer          m_curMove;
 
 //========================================================================
 //

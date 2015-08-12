@@ -84,7 +84,8 @@ s_tblHandName[NUM_PIECE_TYPES][3]   = {
 //
 
 GameController::GameController()
-    : m_gcBoard()
+    : m_gcBoard(),
+      m_curMove()
 {
 }
 
@@ -164,9 +165,9 @@ GameController::playMoveAction(
 
 ErrCode
 GameController::playPutAction(
-        const   PosCol      xPutCol,
-        const   PosRow      yPutRow,
-        const   PieceIndex  pHand)
+        const  PosCol       xPutCol,
+        const  PosRow       yPutRow,
+        const  PieceIndex   pHand)
 {
     const   GAME::BoardState::ActionData
         act = this->m_gcBoard.encodePutAction(
@@ -183,6 +184,7 @@ GameController::playPutAction(
 ErrCode
 GameController::resetGameBoard()
 {
+    this->m_curMove = TURN_1ST_PLAYER;
     return ( this->m_gcBoard.resetGameBoard() );
 }
 
