@@ -255,6 +255,18 @@ GameController::writeToViewBuffer(
 //    Accessors.
 //
 
+//----------------------------------------------------------------
+//    手番を持っているプレーヤーを設定する。
+//
+
+ErrCode
+GameController::setTurnPlayer(
+        const  TurnPlayer   curMove)
+{
+    this->m_curMove = curMove;
+    return ( ERR_SUCCESS );
+}
+
 //========================================================================
 //
 //    For Internal Use Only.

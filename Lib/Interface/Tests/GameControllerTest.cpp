@@ -79,6 +79,7 @@ void  GameControllerTest::testPlayForward()
     ViewBuffer      vb;
 
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, B2)  [ ヒヨコ ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -94,6 +95,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb01, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (C1, B2)  [  ゾウ  ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -109,6 +111,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb02, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (A4, B3)  [  ゾウ  ]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -124,6 +127,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb03, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (A1, A2)  [ キリン ]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -139,6 +143,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb04, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, A2)  [  ゾウ  ]  敵キリン  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -154,6 +159,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 1, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb05, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (B1, A2)  [ライオン]  敵ゾウ    を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -169,6 +175,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 1, 0, 0,  1, 1, 0, 0, 0 }
     };
     checkViewBuffer( vb06, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (.R, B3)  [ キリン ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -184,6 +191,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 1, 0, 0, 0 }
     };
     checkViewBuffer( vb07, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (.B, C2)  [  ゾウ  ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -199,6 +207,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb08, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, B2)  [ キリン ]  敵ゾウ    を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -214,6 +223,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 1, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb09, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (A2, B2)  [ライオン]  敵キリン  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -229,6 +239,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 1, 0, 0, 0,  1, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb10, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (.B, A3)  [  ゾウ  ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -244,6 +255,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb11, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (B2, A2)  [ライオン]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -259,6 +271,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb12, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (C4, C3)  [ キリン ]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -274,6 +287,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb13, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (.P, B2)  [ ヒヨコ ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -289,6 +303,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb14, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (A3, B2)  [  ゾウ  ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -304,6 +319,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     2, 0, 0, 0, 0,  0, 0, 1, 0, 0 }
     };
     checkViewBuffer( vb15, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (A2, B2)  [ライオン]  敵ゾウ    を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -319,6 +335,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     2, 0, 0, 0, 0,  0, 1, 1, 0, 0 }
     };
     checkViewBuffer( vb16, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (.P, B3)  [ ヒヨコ ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -334,6 +351,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 1, 1, 0, 0 }
     };
     checkViewBuffer( vb17, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (B2, B1)  [ライオン]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -349,6 +367,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 1, 1, 0, 0 }
     };
     checkViewBuffer( vb18, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B4, A3)  [ライオン]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -364,6 +383,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 1, 1, 0, 0 }
     };
     checkViewBuffer( vb19, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (.R, A2)  [ キリン ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -379,6 +399,7 @@ void  GameControllerTest::testPlayForward()
         }, { 0,     1, 0, 0, 0, 0,  0, 1, 0, 0, 0 }
     };
     checkViewBuffer( vb20, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     return;
 }
@@ -389,6 +410,7 @@ void  GameControllerTest::testPlayMoveAction()
     ViewBuffer      vb;
 
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, B2)  [ ヒヨコ ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -404,6 +426,7 @@ void  GameControllerTest::testPlayMoveAction()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb01, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (B1, B2)  [ライオン]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -419,6 +442,9 @@ void  GameControllerTest::testPlayMoveAction()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb02, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
+
+    return;
 }
 
 void  GameControllerTest::testPlayPutAction()
@@ -427,6 +453,7 @@ void  GameControllerTest::testPlayPutAction()
     ViewBuffer      vb;
 
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, B2)  [ ヒヨコ ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -442,6 +469,7 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb01, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (C1, B2)  [  ゾウ  ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -457,6 +485,7 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     1, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb02, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (.P, A2)  [ ヒヨコ ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
@@ -472,6 +501,7 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     0, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb03, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (A1, A2)  [ キリン ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -487,6 +517,7 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     0, 0, 0, 0, 0,  2, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb04, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (A4, B3)  [  ゾウ  ]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -502,8 +533,9 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     0, 0, 0, 0, 0,  2, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb05, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
-    //  先手  (.P, C3)  [ ヒヨコ ]  持ち駒を打つ。      //
+    //  後手  (.P, C3)  [ ヒヨコ ]  持ち駒を打つ。      //
     CPPUNIT_ASSERT_EQUAL(
             ERR_SUCCESS,
             gc.playPutAction(POS_COL_C, POS_ROW_3, PIECE_WHITE_PAWN));
@@ -517,6 +549,7 @@ void  GameControllerTest::testPlayPutAction()
         }, { 0,     0, 0, 0, 0, 0,  1, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb06, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     return;
 }
@@ -527,6 +560,7 @@ void  GameControllerTest::testPromotion()
     ViewBuffer      vb;
 
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B3, B2)  [ ヒヨコ ]  敵ヒヨコ  を取る。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -542,6 +576,7 @@ void  GameControllerTest::testPromotion()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb01, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  後手  (B1, A2)  [ライオン]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -557,6 +592,7 @@ void  GameControllerTest::testPromotion()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb02, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (B2, B1)  [ヒヨコ成]  捕獲した駒は無し。  //
     CPPUNIT_ASSERT_EQUAL(
@@ -572,9 +608,13 @@ void  GameControllerTest::testPromotion()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb03, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  テストなので、先手番だけ処理する。              //
     //  先手  (B1, B2)  [ニワトリ]  捕獲した駒は無し。  //
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.setTurnPlayer(TURN_1ST_PLAYER) );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
+
     CPPUNIT_ASSERT_EQUAL(
             ERR_SUCCESS,
             gc.playMoveAction(POS_COL_B, POS_ROW_1, POS_COL_B, POS_ROW_2));
@@ -588,9 +628,13 @@ void  GameControllerTest::testPromotion()
         }, { 0,     1, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb04, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     //  先手  (.P, B1)  [ ヒヨコ ]  持ち駒を打つ。      //
     //  持ち駒を打つ場合は、成り駒で打ってはいけない。  //
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.setTurnPlayer(TURN_1ST_PLAYER) );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
+
     CPPUNIT_ASSERT_EQUAL(
             ERR_SUCCESS,
             gc.playPutAction(POS_COL_B, POS_ROW_1, PIECE_BLACK_PAWN));
@@ -604,6 +648,7 @@ void  GameControllerTest::testPromotion()
         }, { 0,     0, 0, 0, 0, 0,  0, 0, 0, 0, 0 }
     };
     checkViewBuffer( vb05, vb, __LINE__ );
+    CPPUNIT_ASSERT_EQUAL( TURN_2ND_PLAYER,  gc.getTurnPlayer() );
 
     return;
 }
@@ -613,7 +658,8 @@ void  GameControllerTest::testResetGameBoard()
     GameController  gc;
     ViewBuffer      vb;
 
-    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS,      gc.resetGameBoard() );
+    CPPUNIT_ASSERT_EQUAL( TURN_1ST_PLAYER,  gc.getTurnPlayer() );
     CPPUNIT_ASSERT_EQUAL( ERR_SUCCESS, gc.writeToViewBuffer(vb) );
 
     constexpr  ViewBuffer  vb1 = {
