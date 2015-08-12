@@ -165,6 +165,29 @@ public:
             const  PieceIndex   pHand);
 
     //----------------------------------------------------------------
+    /**   指定した指し手が合法手か判定する。
+    **
+    **  @param [in] actData
+    **  @retval     ERR_SUCCESS           合法手。
+    **  @retval     ERR_ILLEGAL_ACTION    非合法手。
+    **/
+    ErrCode
+    isLegalAction(
+            const  ActionData   actData)  const;
+
+    //----------------------------------------------------------------
+    /**   指定した指し手が合法手か判定する。
+    **
+    **  @param [in] actData
+    **  @retval     ERR_SUCCESS           合法手。
+    **  @retval     ERR_ILLEGAL_ACTION    非合法手。
+    **/
+    static  ErrCode
+    isLegalAction(
+            const  InternBoard  curStat,
+            const  ActionData   actData);
+
+    //----------------------------------------------------------------
     /**   指定した指し手を取り消して盤面を戻す。
     **
     **  @param [in] actBwd    指し手データの内部形式。

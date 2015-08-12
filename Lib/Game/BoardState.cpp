@@ -227,6 +227,29 @@ BoardState::encodePutAction(
 }
 
 //----------------------------------------------------------------
+//    指定した指し手が合法手か判定する。
+//
+
+ErrCode
+BoardState::isLegalAction(
+        const  ActionData   actData)  const
+{
+    return ( isLegalAction(this->m_ibState, actData) );
+}
+
+//----------------------------------------------------------------
+//    指定した指し手が合法手か判定する。
+//
+
+ErrCode
+BoardState::isLegalAction(
+        const  InternBoard  curStat,
+        const  ActionData   actData)
+{
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    指定した指し手を取り消して盤面を戻す。
 //
 

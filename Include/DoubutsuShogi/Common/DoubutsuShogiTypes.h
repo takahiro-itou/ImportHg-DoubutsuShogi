@@ -42,7 +42,10 @@ enum  ErrCode
     ERR_FAILURE             = 1,
 
     /**   ファイルオープンエラー。  **/
-    ERR_FILE_OPEN_ERROR     = 2
+    ERR_FILE_OPEN_ERROR     = 2,
+
+    /**   合法では無い指し手入力。  **/
+    ERR_ILLEGAL_ACTION      = 3
 };
 
 //----------------------------------------------------------------
