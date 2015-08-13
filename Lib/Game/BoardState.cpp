@@ -55,15 +55,31 @@ s_tblPieceConv[FIELD_WALL_SQUARE + 1]   =
 };
 
 constexpr   GuardPosCol
-s_tblPosColConv[]   =
+s_tblPosColWithGuard[]  =
 {
     GPOS_COL_A,  GPOS_COL_B,  GPOS_COL_C
 };
 
+constexpr   PosCol
+s_tblPosColWoutGuard[]  =
+{
+    POS_NUM_COLS,
+    POS_COL_A,  POS_COL_B,  POS_COL_C,
+    POS_NUM_COLS
+};
+
 constexpr   GuardPosRow
-s_tblPosRowConv[]   =
+s_tblPosRowWithGuard[]  =
 {
     GPOS_ROW_1,  GPOS_ROW_2,  GPOS_ROW_3,  GPOS_ROW_4
+};
+
+constexpr   PosRow
+s_tblPosRowWoutGuard[]  =
+{
+    POS_NUM_ROWS,
+    POS_ROW_1,  POS_ROW_2,  POS_ROW_3,  POS_ROW_4,
+    POS_NUM_ROWS
 };
 
 constexpr   FieldConst
@@ -77,6 +93,36 @@ s_tblHandConv[INTERFACE::NUM_PIECE_TYPES]   =
     FIELD_WHITE_PAWN,   FIELD_WHITE_BISHOP,
     FIELD_WHITE_ROOK,   FIELD_WHITE_KING,
     FIELD_WHITE_GOLD
+};
+
+constexpr   INTERFACE::PieceIndex
+s_tblPieceFromField[FIELD_WALL_SQUARE]  = {
+    INTERFACE::PIECE_EMPTY,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+
+    INTERFACE::PIECE_BLACK_PAWN,
+    INTERFACE::PIECE_BLACK_BISHOP,
+    INTERFACE::PIECE_BLACK_ROOK,
+    INTERFACE::PIECE_BLACK_KING,
+    INTERFACE::PIECE_BLACK_GOLD,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+
+    INTERFACE::PIECE_WHITE_PAWN,
+    INTERFACE::PIECE_WHITE_BISHOP,
+    INTERFACE::PIECE_WHITE_ROOK,
+    INTERFACE::PIECE_WHITE_KING,
+    INTERFACE::PIECE_WHITE_GOLD,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES
 };
 
 }   //  End of (Unnamed) namespace.
@@ -124,6 +170,22 @@ BoardState::decodeActionData(
         const  ActionData      &actData,
         INTERFACE::ActionView  &actView)
 {
+    actView.xOldCol = s_tblPosColWoutGuard[actData.xOldCol];
+    actView.yOldRow = s_tblPosRowWoutGuard[actData.yOldRow];
+    actView.xNewCol = s_tblPosColWoutGuard[actData.xNewCol];
+    actView.yNewRow = s_tblPosRowWoutGuard[actData.yNewRow];
+
+    if ( actData.putHand != FIELD_EMPTY_SQUARE ) {
+        actView.piMoved = s_tblPieceFromField[actData.putHand];
+        actView.flgProm = ACT_NO_PROMOTION;
+    } else {
+        actView.piMoved = s_tblPieceFromField[actData.fpMoved];
+        actView.flgProm = ( (actData.fpAfter != actData.fpMoved)
+                ? ACT_PROMOTION : ACT_NO_PROMOTION );
+    }
+    actView.piCatch = s_tblPieceFromField[actData.fpCatch];
+    actView.putHand = s_tblPieceFromField[actData.putHand];
+
     return ( ERR_SUCCESS );
 }
 
@@ -158,10 +220,10 @@ BoardState::encodeMoveAction(
         const  PosRow       yNewRow,
         const  PromoteFlag  flgProm)
 {
-    const  GuardPosCol  gOX = s_tblPosColConv[xOldCol];
-    const  GuardPosRow  gOY = s_tblPosRowConv[yOldRow];
-    const  GuardPosCol  gNX = s_tblPosColConv[xNewCol];
-    const  GuardPosRow  gNY = s_tblPosRowConv[yNewRow];
+    const  GuardPosCol  gOX = s_tblPosColWithGuard[xOldCol];
+    const  GuardPosRow  gOY = s_tblPosRowWithGuard[yOldRow];
+    const  GuardPosCol  gNX = s_tblPosColWithGuard[xNewCol];
+    const  GuardPosRow  gNY = s_tblPosRowWithGuard[yNewRow];
     const  FieldConst   tmp = curStat.m_bsField[gOY][gOX];
 
     FieldConst  prm = tmp;
@@ -227,8 +289,8 @@ BoardState::encodePutAction(
     const  ActionData   act = {
         GPOS_COL_L,
         GPOS_ROW_U,
-        s_tblPosColConv[xPutCol],
-        s_tblPosRowConv[yPutRow],
+        s_tblPosColWithGuard[xPutCol],
+        s_tblPosRowWithGuard[yPutRow],
         FIELD_EMPTY_SQUARE,
         FIELD_EMPTY_SQUARE,
         fcHand,
