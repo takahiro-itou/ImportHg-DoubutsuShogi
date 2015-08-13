@@ -272,10 +272,7 @@ public:
     **  @return     現在の盤面の状態。
     **/
     const   InternBoard
-    getCurrentState()  const
-    {
-        return ( this->m_ibState );
-    }
+    getCurrentState()  const;
 
     //----------------------------------------------------------------
     /**   現在の局面を設定する。

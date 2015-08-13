@@ -328,7 +328,6 @@ BoardState::resetGameBoard(
     }
 
     return ( ERR_SUCCESS );
-
 }
 
 //========================================================================
@@ -380,6 +379,16 @@ BoardState::copyToViewBuffer(
     }
 
     return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    現在の盤面を内部形式で取得する。
+//
+
+const   BoardState::InternBoard
+BoardState::getCurrentState()  const
+{
+    return ( this->m_ibState );
 }
 
 //----------------------------------------------------------------
