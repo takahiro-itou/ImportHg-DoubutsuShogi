@@ -55,8 +55,8 @@ encodeRowName(
 
 const   INTERFACE::PieceIndex
 encodePieceName(
-        const  int   nPlayer,
-        const  char  chName)
+        const  TurnPlayer   nPlayer,
+        const  char         chName)
 {
     switch ( chName ) {
     case  'B':  case  'b':
@@ -103,14 +103,13 @@ int  main(int argc, char * argv[])
 
     std::istream  & isCnsl  = (std::cin);
     std::string     strLine;
-    int             nPlayer = 0;
 
     gc.resetGameBoard();
 
     while ( 1 ) {
         gc.writeToStream(std::cout) << std::endl;
         std::cout   << "\n"
-                    << (nPlayer ? "後手" : "先手")
+                    << (gc.getTurnPlayer() ? "後手" : "先手")
                     << "の手番です。\n"
                     << "指し手を入力してください（? でヘルプ）：";
         isCnsl      >> strLine;
@@ -127,22 +126,23 @@ int  main(int argc, char * argv[])
 
         if ( strLine[0] == '.' ) {
             //  持ち駒を打つ。      //
-            const   PieceIndex  pi  = encodePieceName(nPlayer, strLine[1]);
-            const   PosCol  xPutCol = encodeColName(strLine[2]);
-            const   PosRow  yPutRow = encodeRowName(strLine[3]);
-            if ( (pi == PIECE_EMPTY)
+            const  PieceIndex
+                piHand  = encodePieceName(gc.getTurnPlayer(), strLine[1]);
+            const  PosCol   xPutCol = encodeColName(strLine[2]);
+            const  PosRow   yPutRow = encodeRowName(strLine[3]);
+            if ( (piHand == PIECE_EMPTY)
                     || (xPutCol == POS_NUM_COLS)
                     || (yPutRow == POS_NUM_ROWS) )
             {
                 continue;
             }
-            gc.playPutAction(xPutCol, yPutRow, pi);
+            gc.playPutAction(xPutCol, yPutRow, piHand);
         } else {
             //  盤上の駒を動かす。  //
-            const   PosCol  xOldCol = encodeColName(strLine[0]);
-            const   PosRow  yOldRow = encodeRowName(strLine[1]);
-            const   PosCol  xNewCol = encodeColName(strLine[2]);
-            const   PosRow  yNewRow = encodeRowName(strLine[3]);
+            const  PosCol   xOldCol = encodeColName(strLine[0]);
+            const  PosRow   yOldRow = encodeRowName(strLine[1]);
+            const  PosCol   xNewCol = encodeColName(strLine[2]);
+            const  PosRow   yNewRow = encodeRowName(strLine[3]);
             if ( (xOldCol == POS_NUM_COLS)
                     || (yOldRow == POS_NUM_ROWS)
                     || (xNewCol == POS_NUM_COLS)
@@ -152,8 +152,6 @@ int  main(int argc, char * argv[])
             }
             gc.playMoveAction(xOldCol, yOldRow, xNewCol, yNewRow);
         }
-        //  手番を交代する。    //
-        nPlayer = (nPlayer + 1) & 1;
     }
 
     return ( 0 );
