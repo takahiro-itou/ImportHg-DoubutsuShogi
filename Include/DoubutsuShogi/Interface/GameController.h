@@ -71,7 +71,6 @@ public:
     **/
     virtual  ~GameController();
 
-
 //========================================================================
 //
 //    Public Member Functions (Implement Pure Virtual).

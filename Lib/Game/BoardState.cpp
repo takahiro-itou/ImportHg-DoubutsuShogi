@@ -255,7 +255,7 @@ BoardState::isLegalAction(
 
 const   BoardState::InternBoard
 BoardState::playBackward(
-        const   ActionData  actBwd)
+        const  ActionData   actBwd)
 {
     return ( this->m_ibState );
 }
@@ -266,7 +266,7 @@ BoardState::playBackward(
 
 const   BoardState::InternBoard
 BoardState::playForward(
-        const   ActionData  actFwd)
+        const  ActionData   actFwd)
 {
     InternBoard  & ibSt = (this->m_ibState);
 
@@ -296,29 +296,39 @@ BoardState::playForward(
 ErrCode
 BoardState::resetGameBoard()
 {
-    InternBoard  & ibSt = (this->m_ibState);
+    return ( resetGameBoard(&(this->m_ibState)) );
+}
 
+//----------------------------------------------------------------
+//    盤面を初期状態に設定する。
+//
+
+ErrCode
+BoardState::resetGameBoard(
+        InternBoard  *  pCurStat)
+{
     for ( int yr = 0; yr < GPOS_NUM_ROWS; ++ yr ) {
         for ( int xc = 0; xc < GPOS_NUM_COLS; ++ xc ) {
-            ibSt.m_bsField[yr][xc]  = FIELD_EMPTY_SQUARE;
+            pCurStat->m_bsField[yr][xc] = FIELD_EMPTY_SQUARE;
         }
     }
 
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_A]  = FIELD_WHITE_ROOK;
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_B]  = FIELD_WHITE_KING;
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_C]  = FIELD_WHITE_BISHOP;
-    ibSt.m_bsField[GPOS_ROW_2][GPOS_COL_B]  = FIELD_WHITE_PAWN;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_A] = FIELD_WHITE_ROOK;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_B] = FIELD_WHITE_KING;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_C] = FIELD_WHITE_BISHOP;
+    pCurStat->m_bsField[GPOS_ROW_2][GPOS_COL_B] = FIELD_WHITE_PAWN;
 
-    ibSt.m_bsField[GPOS_ROW_3][GPOS_COL_B]  = FIELD_BLACK_PAWN;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_A]  = FIELD_BLACK_BISHOP;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_B]  = FIELD_BLACK_KING;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_C]  = FIELD_BLACK_ROOK;
+    pCurStat->m_bsField[GPOS_ROW_3][GPOS_COL_B] = FIELD_BLACK_PAWN;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_A] = FIELD_BLACK_BISHOP;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_B] = FIELD_BLACK_KING;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_C] = FIELD_BLACK_ROOK;
 
     for ( int hp = 0; hp < FIELD_WALL_SQUARE; ++ hp ) {
-        ibSt.m_nHands[hp]   = 0;
+        pCurStat->m_nHands[hp]  = 0;
     }
 
     return ( ERR_SUCCESS );
+
 }
 
 //========================================================================
@@ -334,13 +344,23 @@ ErrCode
 BoardState::copyToViewBuffer(
         INTERFACE::ViewBuffer  &bufView)  const
 {
-    using   namespace   INTERFACE;
+    return ( copyToViewBuffer(this->m_ibState, bufView) );
+}
 
-    const  InternBoard  & ibSt  = (this->m_ibState);
+//----------------------------------------------------------------
+//    現在の盤面を取得して、表示用バッファにコピーする。
+//
+
+ErrCode
+BoardState::copyToViewBuffer(
+        const  InternBoard      curStat,
+        INTERFACE::ViewBuffer  &bufView)
+{
+    using   namespace   INTERFACE;
 
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
-            const   FieldConst  fc  = ibSt.m_bsField[y + 1][x + 1];
+            const   FieldConst  fc  = curStat.m_bsField[y + 1][x + 1];
             bufView.piBoard[y * POS_NUM_COLS + x]   = s_tblPieceConv[fc];
         }
     }
@@ -349,17 +369,44 @@ BoardState::copyToViewBuffer(
             hp <= INTERFACE::PIECE_BLACK_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_BLACK_PAWN - INTERFACE::PIECE_BLACK_PAWN;
-        bufView.nHands[hp]  = ibSt.m_nHands[hs];
+        bufView.nHands[hp]  = curStat.m_nHands[hs];
     }
 
     for ( int hp = INTERFACE::PIECE_WHITE_PAWN;
             hp <= INTERFACE::PIECE_WHITE_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_WHITE_PAWN - INTERFACE::PIECE_WHITE_PAWN;
-        bufView.nHands[hp]  = ibSt.m_nHands[hs];
+        bufView.nHands[hp]  = curStat.m_nHands[hs];
     }
 
     return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    現在の局面を設定する。
+//
+
+ErrCode
+BoardState::setCurrentState(
+        const  InternBoard  curStat)
+{
+    this->m_ibState = curStat;
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    現在の局面を設定する。
+//
+
+ErrCode
+BoardState::setCurrentState(
+        const  INTERFACE::ViewBuffer  & bufView)
+{
+    InternBoard     curStat;
+
+    resetGameBoard(&curStat);
+
+    return ( setCurrentState(curStat) );
 }
 
 //========================================================================

@@ -178,6 +178,7 @@ public:
     //----------------------------------------------------------------
     /**   指定した指し手が合法手か判定する。
     **
+    **  @param [in] curStat   現在の盤面データ。
     **  @param [in] actData
     **  @retval     ERR_SUCCESS           合法手。
     **  @retval     ERR_ILLEGAL_ACTION    非合法手。
@@ -195,7 +196,7 @@ public:
     **/
     const   InternBoard
     playBackward(
-            const   ActionData  actBwd);
+            const  ActionData   actBwd);
 
     //----------------------------------------------------------------
     /**   指定した指し手で盤面を進める。
@@ -205,7 +206,7 @@ public:
     **/
     const   InternBoard
     playForward(
-            const   ActionData  actFwd);
+            const  ActionData   actFwd);
 
     //----------------------------------------------------------------
     /**   盤面を初期状態に設定する。
@@ -217,6 +218,19 @@ public:
     **/
     ErrCode
     resetGameBoard();
+
+    //----------------------------------------------------------------
+    /**   盤面を初期状態に設定する。
+    **
+    **  @param[out] pCurStat    盤面データを書き込む領域。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    static  ErrCode
+    resetGameBoard(
+            InternBoard  *  pCurStat);
 
 //========================================================================
 //
@@ -238,6 +252,21 @@ public:
             INTERFACE::ViewBuffer  &bufView)  const;
 
     //----------------------------------------------------------------
+    /**   現在の盤面を取得して、表示用バッファにコピーする。
+    **
+    **  @param [in] curStat   現在の盤面データ。
+    **  @param[out] bufView   表示用バッファ。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    static  ErrCode
+    copyToViewBuffer(
+            const  InternBoard      curStat,
+            INTERFACE::ViewBuffer  &bufView);
+
+    //----------------------------------------------------------------
     /**   現在の盤面を内部形式で取得する。
     **
     **  @return     現在の盤面の状態。
@@ -247,6 +276,32 @@ public:
     {
         return ( this->m_ibState );
     }
+
+    //----------------------------------------------------------------
+    /**   現在の局面を設定する。
+    **
+    **  @param [in] curStat   設定する内容。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    setCurrentState(
+            const  InternBoard  curStat);
+
+    //----------------------------------------------------------------
+    /**   現在の局面を設定する。
+    **
+    **  @param [in] curStat   設定する内容。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    setCurrentState(
+            const  INTERFACE::ViewBuffer  & bufView);
 
 //========================================================================
 //
