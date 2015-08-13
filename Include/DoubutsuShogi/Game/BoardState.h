@@ -127,7 +127,7 @@ public:
     **/
     static  const   ActionData
     encodeMoveAction(
-            const  InternBoard  curStat,
+            const  InternBoard  &curStat,
             const  PosCol       xOldCol,
             const  PosRow       yOldRow,
             const  PosCol       xNewCol,
@@ -159,7 +159,7 @@ public:
     **/
     static  const   ActionData
     encodePutAction(
-            const  InternBoard  curStat,
+            const  InternBoard  &curStat,
             const  PosCol       xPutCol,
             const  PosRow       yPutRow,
             const  PieceIndex   pHand);
@@ -173,7 +173,7 @@ public:
     **/
     ErrCode
     isLegalAction(
-            const  ActionData   actData)  const;
+            const  ActionData   &actData)  const;
 
     //----------------------------------------------------------------
     /**   指定した指し手が合法手か判定する。
@@ -185,8 +185,8 @@ public:
     **/
     static  ErrCode
     isLegalAction(
-            const  InternBoard  curStat,
-            const  ActionData   actData);
+            const  InternBoard  &curStat,
+            const  ActionData   &actData);
 
     //----------------------------------------------------------------
     /**   指定した指し手を取り消して盤面を戻す。
@@ -196,7 +196,7 @@ public:
     **/
     const   InternBoard
     playBackward(
-            const  ActionData   actBwd);
+            const  ActionData   &actBwd);
 
     //----------------------------------------------------------------
     /**   指定した指し手で盤面を進める。
@@ -206,7 +206,7 @@ public:
     **/
     const   InternBoard
     playForward(
-            const  ActionData   actFwd);
+            const  ActionData   &actFwd);
 
     //----------------------------------------------------------------
     /**   盤面を初期状態に設定する。
@@ -263,7 +263,7 @@ public:
     **/
     static  ErrCode
     copyToViewBuffer(
-            const  InternBoard      curStat,
+            const  InternBoard     &curStat,
             INTERFACE::ViewBuffer  &bufView);
 
     //----------------------------------------------------------------
@@ -285,7 +285,7 @@ public:
     **/
     ErrCode
     setCurrentState(
-            const  InternBoard  curStat);
+            const  InternBoard  &curStat);
 
     //----------------------------------------------------------------
     /**   現在の局面を設定する。

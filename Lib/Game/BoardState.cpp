@@ -139,7 +139,7 @@ BoardState::encodeMoveAction(
 
 const   BoardState::ActionData
 BoardState::encodeMoveAction(
-        const  InternBoard  curStat,
+        const  InternBoard  &curStat,
         const  PosCol       xOldCol,
         const  PosRow       yOldRow,
         const  PosCol       xNewCol,
@@ -205,7 +205,7 @@ BoardState::encodePutAction(
 
 const   BoardState::ActionData
 BoardState::encodePutAction(
-        const  InternBoard  curStat,
+        const  InternBoard  &curStat,
         const  PosCol       xPutCol,
         const  PosRow       yPutRow,
         const  PieceIndex   pHand)
@@ -232,7 +232,7 @@ BoardState::encodePutAction(
 
 ErrCode
 BoardState::isLegalAction(
-        const  ActionData   actData)  const
+        const  ActionData   &actData)  const
 {
     return ( isLegalAction(this->m_ibState, actData) );
 }
@@ -243,8 +243,8 @@ BoardState::isLegalAction(
 
 ErrCode
 BoardState::isLegalAction(
-        const  InternBoard  curStat,
-        const  ActionData   actData)
+        const  InternBoard  &curStat,
+        const  ActionData   &actData)
 {
     return ( ERR_SUCCESS );
 }
@@ -255,7 +255,7 @@ BoardState::isLegalAction(
 
 const   BoardState::InternBoard
 BoardState::playBackward(
-        const  ActionData   actBwd)
+        const  ActionData   &actBwd)
 {
     return ( this->m_ibState );
 }
@@ -266,7 +266,7 @@ BoardState::playBackward(
 
 const   BoardState::InternBoard
 BoardState::playForward(
-        const  ActionData   actFwd)
+        const  ActionData   &actFwd)
 {
     InternBoard  & ibSt = (this->m_ibState);
 
@@ -352,7 +352,7 @@ BoardState::copyToViewBuffer(
 
 ErrCode
 BoardState::copyToViewBuffer(
-        const  InternBoard      curStat,
+        const  InternBoard     &curStat,
         INTERFACE::ViewBuffer  &bufView)
 {
     using   namespace   INTERFACE;
@@ -397,7 +397,7 @@ BoardState::getCurrentState()  const
 
 ErrCode
 BoardState::setCurrentState(
-        const  InternBoard  curStat)
+        const  InternBoard  &curStat)
 {
     this->m_ibState = curStat;
     return ( ERR_SUCCESS );
