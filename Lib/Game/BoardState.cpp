@@ -116,6 +116,18 @@ BoardState::~BoardState()
 //
 
 //----------------------------------------------------------------
+//    指し手の内部形式を表示用データに変換する。
+//
+
+ErrCode
+BoardState::decodeActionData(
+        const  ActionData      &actData,
+        INTERFACE::ActionView  &actView)
+{
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    駒を移動する指し手を内部形式に変換する。
 //
 

@@ -97,6 +97,21 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   指し手の内部形式を表示用データに変換する。
+    **
+    **  @param [in] actData   指し手データの内部形式。
+    **  @param[out] actView   表示用データを書き込む領域。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    static  ErrCode
+    decodeActionData(
+            const  ActionData      &actData,
+            INTERFACE::ActionView  &actView);
+
+    //----------------------------------------------------------------
     /**   駒を移動する指し手を内部形式に変換する。
     **
     **  @param [in] xOldCol   移動元の座標（横方向）。
@@ -167,7 +182,7 @@ public:
     //----------------------------------------------------------------
     /**   指定した指し手が合法手か判定する。
     **
-    **  @param [in] actData
+    **  @param [in] actData   指し手データの内部形式。
     **  @retval     ERR_SUCCESS           合法手。
     **  @retval     ERR_ILLEGAL_ACTION    非合法手。
     **/
@@ -179,7 +194,7 @@ public:
     /**   指定した指し手が合法手か判定する。
     **
     **  @param [in] curStat   現在の盤面データ。
-    **  @param [in] actData
+    **  @param [in] actData   指し手データの内部形式。
     **  @retval     ERR_SUCCESS           合法手。
     **  @retval     ERR_ILLEGAL_ACTION    非合法手。
     **/
