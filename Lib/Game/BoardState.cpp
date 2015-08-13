@@ -55,15 +55,31 @@ s_tblPieceConv[FIELD_WALL_SQUARE + 1]   =
 };
 
 constexpr   GuardPosCol
-s_tblPosColConv[]   =
+s_tblPosColWithGuard[]  =
 {
     GPOS_COL_A,  GPOS_COL_B,  GPOS_COL_C
 };
 
+constexpr   PosCol
+s_tblPosColWoutGuard[]  =
+{
+    POS_NUM_COLS,
+    POS_COL_A,  POS_COL_B,  POS_COL_C,
+    POS_NUM_COLS
+};
+
 constexpr   GuardPosRow
-s_tblPosRowConv[]   =
+s_tblPosRowWithGuard[]  =
 {
     GPOS_ROW_1,  GPOS_ROW_2,  GPOS_ROW_3,  GPOS_ROW_4
+};
+
+constexpr   PosRow
+s_tblPosRowWoutGuard[]  =
+{
+    POS_NUM_ROWS,
+    POS_ROW_1,  POS_ROW_2,  POS_ROW_3,  POS_ROW_4,
+    POS_NUM_ROWS
 };
 
 constexpr   FieldConst
@@ -77,6 +93,36 @@ s_tblHandConv[INTERFACE::NUM_PIECE_TYPES]   =
     FIELD_WHITE_PAWN,   FIELD_WHITE_BISHOP,
     FIELD_WHITE_ROOK,   FIELD_WHITE_KING,
     FIELD_WHITE_GOLD
+};
+
+constexpr   INTERFACE::PieceIndex
+s_tblPieceFromField[FIELD_WALL_SQUARE]  = {
+    INTERFACE::PIECE_EMPTY,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+
+    INTERFACE::PIECE_BLACK_PAWN,
+    INTERFACE::PIECE_BLACK_BISHOP,
+    INTERFACE::PIECE_BLACK_ROOK,
+    INTERFACE::PIECE_BLACK_KING,
+    INTERFACE::PIECE_BLACK_GOLD,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+
+    INTERFACE::PIECE_WHITE_PAWN,
+    INTERFACE::PIECE_WHITE_BISHOP,
+    INTERFACE::PIECE_WHITE_ROOK,
+    INTERFACE::PIECE_WHITE_KING,
+    INTERFACE::PIECE_WHITE_GOLD,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES,
+    INTERFACE::NUM_PIECE_TYPES
 };
 
 }   //  End of (Unnamed) namespace.
@@ -116,6 +162,34 @@ BoardState::~BoardState()
 //
 
 //----------------------------------------------------------------
+//    指し手の内部形式を表示用データに変換する。
+//
+
+ErrCode
+BoardState::decodeActionData(
+        const  ActionData      &actData,
+        INTERFACE::ActionView  &actView)
+{
+    actView.xOldCol = s_tblPosColWoutGuard[actData.xOldCol];
+    actView.yOldRow = s_tblPosRowWoutGuard[actData.yOldRow];
+    actView.xNewCol = s_tblPosColWoutGuard[actData.xNewCol];
+    actView.yNewRow = s_tblPosRowWoutGuard[actData.yNewRow];
+
+    if ( actData.putHand != FIELD_EMPTY_SQUARE ) {
+        actView.piMoved = s_tblPieceFromField[actData.putHand];
+        actView.flgProm = ACT_NO_PROMOTION;
+    } else {
+        actView.piMoved = s_tblPieceFromField[actData.fpMoved];
+        actView.flgProm = ( (actData.fpAfter != actData.fpMoved)
+                ? ACT_PROMOTION : ACT_NO_PROMOTION );
+    }
+    actView.piCatch = s_tblPieceFromField[actData.fpCatch];
+    actView.putHand = s_tblPieceFromField[actData.putHand];
+
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    駒を移動する指し手を内部形式に変換する。
 //
 
@@ -139,17 +213,17 @@ BoardState::encodeMoveAction(
 
 const   BoardState::ActionData
 BoardState::encodeMoveAction(
-        const  InternBoard  curStat,
+        const  InternBoard  &curStat,
         const  PosCol       xOldCol,
         const  PosRow       yOldRow,
         const  PosCol       xNewCol,
         const  PosRow       yNewRow,
         const  PromoteFlag  flgProm)
 {
-    const  GuardPosCol  gOX = s_tblPosColConv[xOldCol];
-    const  GuardPosRow  gOY = s_tblPosRowConv[yOldRow];
-    const  GuardPosCol  gNX = s_tblPosColConv[xNewCol];
-    const  GuardPosRow  gNY = s_tblPosRowConv[yNewRow];
+    const  GuardPosCol  gOX = s_tblPosColWithGuard[xOldCol];
+    const  GuardPosRow  gOY = s_tblPosRowWithGuard[yOldRow];
+    const  GuardPosCol  gNX = s_tblPosColWithGuard[xNewCol];
+    const  GuardPosRow  gNY = s_tblPosRowWithGuard[yNewRow];
     const  FieldConst   tmp = curStat.m_bsField[gOY][gOX];
 
     FieldConst  prm = tmp;
@@ -205,7 +279,7 @@ BoardState::encodePutAction(
 
 const   BoardState::ActionData
 BoardState::encodePutAction(
-        const  InternBoard  curStat,
+        const  InternBoard  &curStat,
         const  PosCol       xPutCol,
         const  PosRow       yPutRow,
         const  PieceIndex   pHand)
@@ -215,8 +289,8 @@ BoardState::encodePutAction(
     const  ActionData   act = {
         GPOS_COL_L,
         GPOS_ROW_U,
-        s_tblPosColConv[xPutCol],
-        s_tblPosRowConv[yPutRow],
+        s_tblPosColWithGuard[xPutCol],
+        s_tblPosRowWithGuard[yPutRow],
         FIELD_EMPTY_SQUARE,
         FIELD_EMPTY_SQUARE,
         fcHand,
@@ -232,7 +306,7 @@ BoardState::encodePutAction(
 
 ErrCode
 BoardState::isLegalAction(
-        const  ActionData   actData)  const
+        const  ActionData   &actData)  const
 {
     return ( isLegalAction(this->m_ibState, actData) );
 }
@@ -243,8 +317,8 @@ BoardState::isLegalAction(
 
 ErrCode
 BoardState::isLegalAction(
-        const  InternBoard  curStat,
-        const  ActionData   actData)
+        const  InternBoard  &curStat,
+        const  ActionData   &actData)
 {
     return ( ERR_SUCCESS );
 }
@@ -255,7 +329,7 @@ BoardState::isLegalAction(
 
 const   BoardState::InternBoard
 BoardState::playBackward(
-        const   ActionData  actBwd)
+        const  ActionData   &actBwd)
 {
     return ( this->m_ibState );
 }
@@ -266,7 +340,7 @@ BoardState::playBackward(
 
 const   BoardState::InternBoard
 BoardState::playForward(
-        const   ActionData  actFwd)
+        const  ActionData   &actFwd)
 {
     InternBoard  & ibSt = (this->m_ibState);
 
@@ -296,26 +370,35 @@ BoardState::playForward(
 ErrCode
 BoardState::resetGameBoard()
 {
-    InternBoard  & ibSt = (this->m_ibState);
+    return ( resetGameBoard(&(this->m_ibState)) );
+}
 
+//----------------------------------------------------------------
+//    盤面を初期状態に設定する。
+//
+
+ErrCode
+BoardState::resetGameBoard(
+        InternBoard  *  pCurStat)
+{
     for ( int yr = 0; yr < GPOS_NUM_ROWS; ++ yr ) {
         for ( int xc = 0; xc < GPOS_NUM_COLS; ++ xc ) {
-            ibSt.m_bsField[yr][xc]  = FIELD_EMPTY_SQUARE;
+            pCurStat->m_bsField[yr][xc] = FIELD_EMPTY_SQUARE;
         }
     }
 
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_A]  = FIELD_WHITE_ROOK;
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_B]  = FIELD_WHITE_KING;
-    ibSt.m_bsField[GPOS_ROW_1][GPOS_COL_C]  = FIELD_WHITE_BISHOP;
-    ibSt.m_bsField[GPOS_ROW_2][GPOS_COL_B]  = FIELD_WHITE_PAWN;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_A] = FIELD_WHITE_ROOK;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_B] = FIELD_WHITE_KING;
+    pCurStat->m_bsField[GPOS_ROW_1][GPOS_COL_C] = FIELD_WHITE_BISHOP;
+    pCurStat->m_bsField[GPOS_ROW_2][GPOS_COL_B] = FIELD_WHITE_PAWN;
 
-    ibSt.m_bsField[GPOS_ROW_3][GPOS_COL_B]  = FIELD_BLACK_PAWN;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_A]  = FIELD_BLACK_BISHOP;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_B]  = FIELD_BLACK_KING;
-    ibSt.m_bsField[GPOS_ROW_4][GPOS_COL_C]  = FIELD_BLACK_ROOK;
+    pCurStat->m_bsField[GPOS_ROW_3][GPOS_COL_B] = FIELD_BLACK_PAWN;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_A] = FIELD_BLACK_BISHOP;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_B] = FIELD_BLACK_KING;
+    pCurStat->m_bsField[GPOS_ROW_4][GPOS_COL_C] = FIELD_BLACK_ROOK;
 
     for ( int hp = 0; hp < FIELD_WALL_SQUARE; ++ hp ) {
-        ibSt.m_nHands[hp]   = 0;
+        pCurStat->m_nHands[hp]  = 0;
     }
 
     return ( ERR_SUCCESS );
@@ -334,13 +417,23 @@ ErrCode
 BoardState::copyToViewBuffer(
         INTERFACE::ViewBuffer  &bufView)  const
 {
-    using   namespace   INTERFACE;
+    return ( copyToViewBuffer(this->m_ibState, bufView) );
+}
 
-    const  InternBoard  & ibSt  = (this->m_ibState);
+//----------------------------------------------------------------
+//    現在の盤面を取得して、表示用バッファにコピーする。
+//
+
+ErrCode
+BoardState::copyToViewBuffer(
+        const  InternBoard     &curStat,
+        INTERFACE::ViewBuffer  &bufView)
+{
+    using   namespace   INTERFACE;
 
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
-            const   FieldConst  fc  = ibSt.m_bsField[y + 1][x + 1];
+            const   FieldConst  fc  = curStat.m_bsField[y + 1][x + 1];
             bufView.piBoard[y * POS_NUM_COLS + x]   = s_tblPieceConv[fc];
         }
     }
@@ -349,17 +442,54 @@ BoardState::copyToViewBuffer(
             hp <= INTERFACE::PIECE_BLACK_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_BLACK_PAWN - INTERFACE::PIECE_BLACK_PAWN;
-        bufView.nHands[hp]  = ibSt.m_nHands[hs];
+        bufView.nHands[hp]  = curStat.m_nHands[hs];
     }
 
     for ( int hp = INTERFACE::PIECE_WHITE_PAWN;
             hp <= INTERFACE::PIECE_WHITE_GOLD; ++ hp )
     {
         const  int  hs  = hp + FIELD_WHITE_PAWN - INTERFACE::PIECE_WHITE_PAWN;
-        bufView.nHands[hp]  = ibSt.m_nHands[hs];
+        bufView.nHands[hp]  = curStat.m_nHands[hs];
     }
 
     return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    現在の盤面を内部形式で取得する。
+//
+
+const   BoardState::InternBoard
+BoardState::getCurrentState()  const
+{
+    return ( this->m_ibState );
+}
+
+//----------------------------------------------------------------
+//    現在の局面を設定する。
+//
+
+ErrCode
+BoardState::setCurrentState(
+        const  InternBoard  &curStat)
+{
+    this->m_ibState = curStat;
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    現在の局面を設定する。
+//
+
+ErrCode
+BoardState::setCurrentState(
+        const  INTERFACE::ViewBuffer  & bufView)
+{
+    InternBoard     curStat;
+
+    resetGameBoard(&curStat);
+
+    return ( setCurrentState(curStat) );
 }
 
 //========================================================================

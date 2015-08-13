@@ -57,6 +57,25 @@ struct  ViewBuffer
     int         nHands [NUM_PIECE_TYPES];       /**<  持ち駒の数。  **/
 };
 
+//----------------------------------------------------------------
+/**
+**    指し手の内部形式を表示用データに変換した構造体。
+**/
+
+struct  ActionView
+{
+    PosCol          xOldCol;        /**<  移動元の座標（横方向）。  **/
+    PosRow          yOldRow;        /**<  移動元の座標（縦方向）。  **/
+    PosCol          xNewCol;        /**<  移動先の座標（横方向）。  **/
+    PosRow          yNewRow;        /**<  移動先の座標（縦方向）。  **/
+
+    PieceIndex      piMoved;        /**<  移動した自分の駒の種類。  **/
+    PromoteFlag     flgProm;        /**<  駒が成るか成らないか？    **/
+    PieceIndex      piCatch;        /**<  捕獲した敵駒の種類。      **/
+
+    PieceIndex      putHand;        /**<  打った持ち駒の種類。      **/
+};
+
 }   //  End of namespace  INTERFACE
 DSHOGI_NAMESPACE_END
 
