@@ -69,7 +69,7 @@ struct  ActionView
     PosCol          xNewCol;        /**<  移動先の座標（横方向）。  **/
     PosRow          yNewRow;        /**<  移動先の座標（縦方向）。  **/
 
-    PieceIndex      fpMoved;        /**<  移動した自分の駒の種類。  **/
+    PieceIndex      piMoved;        /**<  移動した自分の駒の種類。  **/
     PromoteFlag     flgProm;        /**<  駒が成るか成らないか？    **/
     PieceIndex      piCatch;        /**<  捕獲した敵駒の種類。      **/
 

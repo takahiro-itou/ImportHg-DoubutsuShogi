@@ -51,6 +51,12 @@ checkViewBuffer(
         const  ViewBuffer  &vbAct,
         const  int          nLine);
 
+void
+checkActionView(
+        const  ActionView   avExp,
+        const  ActionView  &avAct,
+        const  int          nLine);
+
 }   //  End of namespace  INTERFACE
 DSHOGI_NAMESPACE_END
 

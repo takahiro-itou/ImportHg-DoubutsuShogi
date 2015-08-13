@@ -73,7 +73,6 @@ checkViewBuffer(
         const  int          nLine)
 {
     (void)(nLine);
-    ////std::cerr   << "CheckViewBuffer : Caller = " << nLine << std::endl;
 
     CPPUNIT_ASSERT_EQUAL(
             vbExp.piBoard[POS_MAT_A1],  vbAct.piBoard[POS_MAT_A1] );
@@ -135,7 +134,26 @@ checkViewBuffer(
             vbExp.nHands[PIECE_WHITE_GOLD],
             vbAct.nHands[PIECE_WHITE_GOLD]);
 
-    ////std::cerr   << "CheckViewBuffer : OK" << std::endl;
+    return;
+}
+
+void
+checkActionView(
+        const  ActionView   avExp,
+        const  ActionView  &avAct,
+        const  int          nLine)
+{
+    (void)(nLine);
+
+    CPPUNIT_ASSERT_EQUAL( avExp.xOldCol,  avAct.xOldCol );
+    CPPUNIT_ASSERT_EQUAL( avExp.yOldRow,  avAct.yOldRow );
+    CPPUNIT_ASSERT_EQUAL( avExp.xNewCol,  avAct.xNewCol );
+    CPPUNIT_ASSERT_EQUAL( avExp.yNewRow,  avAct.yNewRow );
+
+    CPPUNIT_ASSERT_EQUAL( avExp.piMoved,  avAct.piMoved );
+    CPPUNIT_ASSERT_EQUAL( avExp.flgProm,  avAct.flgProm );
+    CPPUNIT_ASSERT_EQUAL( avExp.piCatch,  avAct.piCatch );
+    CPPUNIT_ASSERT_EQUAL( avExp.putHand,  avAct.putHand );
 
     return;
 }
