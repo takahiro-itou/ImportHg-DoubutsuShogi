@@ -25,6 +25,7 @@ CXXFLAGS="${CXXFLAGS}  -std=c++11  -Wall  -Weffc++"
 dnl
 dnl   Check Programs.
 dnl
+
 AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
@@ -34,7 +35,22 @@ AC_PROG_RANLIB
 dnl
 dnl   Check Header Files.
 dnl
-AC_CHECK_HEADERS([stdint.h])
+
+AC_CHECK_HEADER([stdint.h])
+AC_CHECK_HEADER(
+    [windows.h],
+    [dsgcnf_have_windows_h=TRUE],
+    [dsgcnf_have_windows_h=FALSE]
+)
+
+AM_CONDITIONAL(
+    DSHOGI_AMCNF_ENABLE_WINDOWS_H,
+    test  "x${dsgcnf_have_windows_h}" = 'xTRUE')
+if  test  "x${dsgcnf_have_windows_h}" = 'xTRUE' ; then
+  AC_DEFINE(
+      [HAVE_WINDOWS_H], [1],
+      [Define to 1 if you have the <windows.h> header file.])
+fi
 
 dnl
 dnl   Check Libraries.
@@ -43,6 +59,7 @@ dnl
 dnl
 dnl   Check Types.
 dnl
+
 AC_TYPE_UINT64_T
 
 dnl

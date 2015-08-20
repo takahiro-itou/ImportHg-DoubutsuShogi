@@ -66,7 +66,7 @@ AM_LDFLAGS              =  \
 LIBTESTDRIVER           =  libTestDriver.a
 dist_noinst_HEADERS     =  $(EXTRATESTDRIVERS)  $(LIBNOINSTHEADERS)
 check_PROGRAMS          =  $(TESTS)
-noinst_LIBRARIES        =  $(LIBTESTDRIVER)
+check_LIBRARIES         =  $(LIBTESTDRIVER)
 
 ##
 ##    Build of Test Drivers.

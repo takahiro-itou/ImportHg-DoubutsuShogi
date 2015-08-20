@@ -16,10 +16,65 @@
 
 #include    "DoubutsuShogi/Interface/GameController.h"
 
+#include    <fstream>
 #include    <iostream>
 
 using   namespace   DSHOGI_NAMESPACE;
 using   namespace   DSHOGI_NAMESPACE::INTERFACE;
+
+namespace  {
+
+const   char
+s_tblColName[POS_NUM_COLS]  = {
+    'A', 'B', 'C'
+};
+
+const   char
+s_tblRowName[POS_NUM_ROWS]  = {
+    '1', '2', '3', '4'
+};
+
+const   char
+s_tblPieceName[]    = {
+    '?',
+    'P', 'B', 'R', 'K', 'G',    //  先手。  //
+    'P', 'B', 'R', 'K', 'G'     //  後手。  //
+};
+
+}   //  End of (Unnamed) namespace.
+
+const   ErrCode
+dumpActionViewList(
+        const  GameController  &gCtrl,
+        std::ostream           &outStr)
+{
+    typedef     GameController::ActionViewList  ActionViewList;
+    typedef     ActionViewList::const_iterator  ActIter;
+
+    ActionViewList  avl;
+
+    gCtrl.makeActionViewList(avl);
+    outStr  << "<BEGIN>"  << std::endl;
+    int             idx     = 0;
+    const  ActIter  itrEnd  = avl.end();
+    for ( ActIter itr = avl.begin(); itr != itrEnd; ++ itr, ++ idx ) {
+        const  ActionView  act  = (* itr);
+        outStr  << (idx) << ":\t";
+        if ( act.putHand != PIECE_EMPTY ) {
+            outStr  << '.' << s_tblPieceName[(act.putHand)];
+        } else {
+            outStr  << s_tblColName[(act.xOldCol)]
+                    << s_tblRowName[(act.yOldRow)];
+        }
+        outStr  << s_tblColName[(act.xNewCol)]
+                << s_tblRowName[(act.yNewRow)];
+        outStr  << std::endl;
+    }
+    outStr  << "<END>"  << std::endl;
+
+    return ( ERR_SUCCESS );
+}
+
 
 const   PosCol
 encodeColName(
@@ -90,8 +145,10 @@ showHelpMessage(
             << "  B - ゾウ   (Bishop)\n"
             << "  R - キリン (Rook)\n"
             << "\n(3) その他：\n"
-            << "q - プログラムを終了する\n"
-            << "? - このヘルプを表示する\n"
+            << "q   - プログラムを終了する\n"
+            << "?   - このヘルプを表示する\n"
+            << ":v  - 棋譜を表示する\n"
+            << ":w  - 棋譜を保存する。名前省略時は Kifu.txt\n"
             << "------------------------------------------------"
             << std::endl;
     return;
@@ -112,7 +169,8 @@ int  main(int argc, char * argv[])
                     << (gc.getTurnPlayer() ? "後手" : "先手")
                     << "の手番です。\n"
                     << "指し手を入力してください（? でヘルプ）：";
-        isCnsl      >> strLine;
+
+        std::getline(isCnsl, strLine);
 
         if ( strLine[0] == 'q' ) {
             //  プログラムを終了する。  //
@@ -121,6 +179,29 @@ int  main(int argc, char * argv[])
         if ( strLine[0] == '?' ) {
             //  ヘルプを表示する。      //
             showHelpMessage(std::cout);
+            continue;
+        }
+
+        if ( strLine[0] == ':' ) {
+            //  特殊コマンド実行。  //
+            if ( strLine.length() == 1 ) {
+                continue;
+            }
+            if ( strLine[1] == 'w' ) {
+                //  棋譜データを保存する。  //
+                std::ofstream   ofsOut;
+                const  char  *  psFile  = "Kifu.txt";
+                if ( strLine.length() > 3 ) {
+                    psFile  = &strLine[3];
+                }
+                ofsOut.open(psFile);
+                dumpActionViewList(gc, ofsOut);
+                std::cerr  << "Wrote " << psFile << std::endl;
+            } else if ( strLine[1] == 'v' ) {
+                //  棋譜データを表示する。  //
+                dumpActionViewList(gc, std::cout);
+                std::cout  << std::endl;
+            }
             continue;
         }
 

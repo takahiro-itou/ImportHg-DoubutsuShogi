@@ -25,6 +25,7 @@
 
 #include    <iosfwd>
 #include    <string>
+#include    <vector>
 
 DSHOGI_NAMESPACE_BEGIN
 namespace  INTERFACE  {
@@ -50,6 +51,9 @@ enum  TurnPlayer
 
 class  GameController
 {
+public:
+
+    typedef     std::vector<ActionView>     ActionViewList;
 
 //========================================================================
 //
@@ -91,6 +95,19 @@ public:
 //    Public Member Functions (Virtual Functions).
 //
 public:
+
+    //----------------------------------------------------------------
+    /**   棋譜データを表示用に変換する。
+    **
+    **  @param[out] actList   棋譜表示用構造体の配列。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    makeActionViewList(
+            ActionViewList  &actList)  const;
 
     //----------------------------------------------------------------
     /**   盤面表示の設定ファイルを開く。
@@ -233,12 +250,19 @@ public:
 //    Member Variables.
 //
 private:
+    typedef     GAME::BoardState::ActionData    ActionData;
+    typedef     std::vector<ActionData>         ActionList;
+
+private:
 
     /**   盤面の状態。  **/
     GAME::BoardState    m_gcBoard;
 
     /**   現在の手番。  **/
     TurnPlayer          m_curMove;
+
+    /**   棋譜データ。  **/
+    ActionList          m_actList;
 
 //========================================================================
 //

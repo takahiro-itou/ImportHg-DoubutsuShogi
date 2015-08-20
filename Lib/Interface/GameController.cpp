@@ -95,7 +95,8 @@ s_tblHandName[NUM_PIECE_TYPES][3]   = {
 
 GameController::GameController()
     : m_gcBoard(),
-      m_curMove()
+      m_curMove(),
+      m_actList()
 {
 }
 
@@ -127,6 +128,31 @@ GameController::~GameController()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    棋譜データを表示用に変換する。
+//
+
+ErrCode
+GameController::makeActionViewList(
+        ActionViewList  &actList)  const
+{
+    typedef     ActionList::const_iterator  ActIter;
+
+    const  ActionList  &obj = (this->m_actList);
+
+    actList.clear();
+    actList.resize(obj.size());
+
+    size_t          idx     = 0;
+    const  ActIter  itrEnd  = obj.end();
+    for ( ActIter itr = obj.begin(); itr != itrEnd; ++ itr, ++ idx )
+    {
+        this->m_gcBoard.decodeActionData( *itr, actList[idx] );
+    }
+
+    return ( ERR_SUCCESS );
+}
 
 //----------------------------------------------------------------
 //    盤面表示の設定ファイルを開く。
@@ -171,6 +197,7 @@ GameController::playMoveAction(
     }
 
     this->m_gcBoard.playForward(act);
+    this->m_actList.push_back  (act);
     this->m_curMove = s_tblNextPlayerTable[this->m_curMove];
 
     return ( ERR_SUCCESS );
@@ -196,6 +223,7 @@ GameController::playPutAction(
     }
 
     this->m_gcBoard.playForward(act);
+    this->m_actList.push_back  (act);
     this->m_curMove = s_tblNextPlayerTable[this->m_curMove];
 
     return ( ERR_SUCCESS );
@@ -209,6 +237,7 @@ ErrCode
 GameController::resetGameBoard()
 {
     this->m_curMove = TURN_1ST_PLAYER;
+    this->m_actList.clear();
     return ( this->m_gcBoard.resetGameBoard() );
 }
 
