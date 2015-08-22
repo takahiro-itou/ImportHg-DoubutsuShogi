@@ -156,18 +156,47 @@ onLButtonDown(
 {
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
 
-    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
-    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
-
-    if ( (mx < 0) || (my < 0)
-            || (VIEW_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
-            || (VIEW_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
-    {
+    if ( (xPos < LEFT_MARGIN) || (yPos < TOP_MARGIN) ) {
+        g_selX  = -1;
+        g_selY  = -1;
+        g_movX  = -1;
+        g_movY  = -1;
+        ::InvalidateRect(hWnd, NULL, TRUE);
         return ( 0 );
     }
 
-    g_selX  = mx;
-    g_selY  = my;
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
+
+    if ( (VIEW_NUM_ROWS <= my) ) {
+        g_selX  = -1;
+        g_selY  = -1;
+        g_movX  = -1;
+        g_movY  = -1;
+        ::InvalidateRect(hWnd, NULL, TRUE);
+        return ( 0 );
+    }
+    if ( (my == 0) || (my == (POS_NUM_ROWS + BOARD_TOP_OFFSET)) ) {
+        if ( (PIECE_WHITE_KING - PIECE_WHITE_PAWN + 1) <= mx ) {
+            g_selX  = -1;
+            g_selY  = -1;
+            g_movX  = -1;
+            g_movY  = -1;
+            ::InvalidateRect(hWnd, NULL, TRUE);
+            return ( 0 );
+        }
+        g_selX  = mx;
+        g_selY  = my;
+    } else if ( (VIEW_NUM_COLS <= mx) ) {
+        g_selX  = -1;
+        g_selY  = -1;
+    } else {
+        g_selX  = mx;
+        g_selY  = my;
+    }
+
+    g_movX  = -1;
+    g_movY  = -1;
     ::InvalidateRect(hWnd, NULL, TRUE);
 
     return ( 0 );
@@ -256,6 +285,8 @@ onMouseMove(
 {
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
 
+    int     mvX, mvY;
+
     if ( (g_selX < 0) || (g_selY < 0) ) {
         return ( 0 );
     }
@@ -263,17 +294,29 @@ onMouseMove(
     const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
     const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
+    if ( (xPos < LEFT_MARGIN) || (yPos < TOP_MARGIN) ) {
+        mvX = -1;
+        mvY = -1;
+        goto    label_redraw_board;
+    }
+
     if ( (mx < BOARD_LEFT_OFFSET) || (my < BOARD_TOP_OFFSET)
             || (POS_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
             || (POS_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
     {
-        g_movX  = -1;
-        g_movY  = -1;
+        mvX = -1;
+        mvY = -1;
     } else {
-        g_movX  = mx;
-        g_movY  = my;
+        mvX = mx;
+        mvY = my;
     }
-    ::InvalidateRect(hWnd, NULL, TRUE);
+
+label_redraw_board:
+    if ( (g_movX != mvX) || (g_movY != mvY) ) {
+        g_movX  = mvX;
+        g_movY  = mvY;
+        ::InvalidateRect(hWnd, NULL, TRUE);
+    }
 
     return ( 0 );
 }
