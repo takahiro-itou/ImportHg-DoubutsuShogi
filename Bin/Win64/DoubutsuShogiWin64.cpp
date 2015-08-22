@@ -16,6 +16,10 @@
 
 #include    "Resources.h"
 
+#if !defined( UTL_HELP_UNUSED_ARGUMENT )
+#    define     UTL_HELP_UNUSED_ARGUMENT(var)   (void)(var)
+#endif
+
 namespace  {
 
 const   char
@@ -24,15 +28,15 @@ g_szClassName[] = "DoubutsuShogiWindow";
 }   //  End of (Unnamed) namespace.
 
 //----------------------------------------------------------------
-/**   メニュー項目のクリック処理。
+/**   メニュー項目を選択した時のイベントハンドラ。
 **
 **/
 
 LRESULT
-OnCommandMenuClick(
-        HWND    hWnd,
-        UINT    wID,
-        UINT    wNotify)
+onCommandMenuClick(
+        const   HWND    hWnd,
+        const   UINT    wID,
+        const   UINT    wNotify)
 {
     switch ( wID ) {
     case  MENU_ID_FILE_EXIT:
@@ -51,6 +55,69 @@ OnCommandMenuClick(
 
 }
 
+//----------------------------------------------------------------
+/**   マウスボタンを押した時のイベントハンドラ。
+**
+**/
+
+onLButtonDown(
+        const   HWND    hWnd,
+        const   DWORD   fwKeys,
+        const   UINT    xPos,
+        const   UINT    yPos)
+{
+    UTL_HELP_UNUSED_ARGUMENT(hWnd);
+    UTL_HELP_UNUSED_ARGUMENT(fwKeys);
+    UTL_HELP_UNUSED_ARGUMENT(xPos);
+    UTL_HELP_UNUSED_ARGUMENT(yPos);
+    return ( 0 );
+}
+
+//----------------------------------------------------------------
+/**   マウスボタンを離した時のイベントハンドラ。
+**
+**/
+
+onLButtonUp(
+        const   HWND    hWnd,
+        const   DWORD   fwKeys,
+        const   UINT    xPos,
+        const   UINT    yPos)
+{
+    UTL_HELP_UNUSED_ARGUMENT(hWnd);
+    UTL_HELP_UNUSED_ARGUMENT(fwKeys);
+    UTL_HELP_UNUSED_ARGUMENT(xPos);
+    UTL_HELP_UNUSED_ARGUMENT(yPos);
+    return ( 0 );
+}
+
+//----------------------------------------------------------------
+/**   マウスを移動させた時のイベントハンドラ。
+**
+**/
+
+onMouseMove(
+        const   HWND    hWnd,
+        const   DWORD   fwKeys,
+        const   UINT    xPos,
+        const   UINT    yPos)
+{
+    UTL_HELP_UNUSED_ARGUMENT(hWnd);
+    UTL_HELP_UNUSED_ARGUMENT(fwKeys);
+    UTL_HELP_UNUSED_ARGUMENT(xPos);
+    UTL_HELP_UNUSED_ARGUMENT(yPos);
+    return ( 0 );
+}
+
+//----------------------------------------------------------------
+
+LRESULT
+onPaint(
+        const   HWND    hWnd,
+        const   HDC     hDC)
+{
+    return ( 0 );
+}
 
 //----------------------------------------------------------------
 /**   ウィンドウプロシージャ。
@@ -68,16 +135,40 @@ WindowProc(
     case  WM_COMMAND:
         //  メニュー選択時の処理。  //
         if ( lParam == 0 ) {
-            return ( OnCommandMenuClick(
+            return ( onCommandMenuClick(
                              hWnd,
-                             wParam & 0xFFFF,
-                             (wParam >> 16) & 0xFFFF)
+                             LOWORD(wParam),
+                             HIWORD(wParam) )
             );
         }
         break;
     case  WM_DESTROY:
         //  ウィンドウを閉じる。    //
         ::PostQuitMessage(0);
+        break;
+    case  WM_LBUTTONDOWN:
+        return ( onLButtonDown(
+                         hWnd,
+                         wParam,
+                         LOWORD(lParam),
+                         HIWORD(lParam) )
+        );
+        break;
+    case  WM_LBUTTONUP:
+        return ( onLButtonUp(
+                         hWnd,
+                         wParam,
+                         LOWORD(lParam),
+                         HIWORD(lParam) )
+        );
+        break;
+    case  WM_PAINT:
+        ; {
+            PAINTSTRUCT     ps;
+            HDC             hDC = ::BeginPaint(hWnd, &ps);
+            onPaint(hWnd, hDC);
+            ::EndPaint(hWnd, &ps);
+        }
         break;
     default:
         return ( ::DefWindowProc(hWnd, uMsg, wParam, lParam) );
