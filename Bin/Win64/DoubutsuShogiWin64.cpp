@@ -14,9 +14,7 @@
 **      @file       Bin/Win64/DoubutsuShogiWin64.cpp
 **/
 
-#define     STRICT
-#define     WIN32_LEAN_AND_MEAN
-#include    <windows.h>
+#include    "Resources.h"
 
 namespace  {
 
@@ -63,7 +61,6 @@ WinMain(
         LPSTR       lpCmdLine,
         int         nCmdShow)
 {
-    HMENU       hMenu;
     HWND        hWnd;
     WNDCLASSEX  wcEx;
 
@@ -84,9 +81,7 @@ WinMain(
         return ( 0 );
     }
 
-    hMenu   = ::CreateMenu();
-
-    ::InsertMenu(hMenu, 0, MF_BYPOSITION, 0, "File");
+    HMENU   hMenu   = createMainMenu();
 
     CREATESTRUCT    cs;
     cs.dwExStyle    =  WS_EX_CLIENTEDGE;
