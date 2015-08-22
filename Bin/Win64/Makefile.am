@@ -14,6 +14,28 @@ LIBTOPDIR               =  $(BLDTOPDIR)/Lib
 ##    List of Source and Header Files.
 ##
 
+EXTRALIBSOURCES         =
+EXTRANOINSTHEADERS      =
+EXTRALIBHEADERS         =
+
+LIBCXXSOURCEFILES       =  \
+        $(EXTRALIBSOURCES)
+
+LIBINSTANTIATIONS       =
+LIBCXXINLINEFILES       =
+
+LIBNOINSTHEADERS        =  \
+        Resources.h            \
+        $(EXTRANOINSTHEADERS)
+
+INCLIBHEADERS           =  \
+        $(EXTRALIBHEADERS)
+
+LIBNODISTHEADERS        =
+
+LIBINSTALLSOURCES       =
+LIBCOMPILESOURCES       =  $(LIBCXXSOURCEFILES)  $(LIBINSTANTIATIONS)
+
 ##
 ##    List of Libraries.
 ##
@@ -40,10 +62,14 @@ AM_CPPFLAGS             += -DDSHOGI_WIN64=1
 bin_PROGRAMS            =  \
         DoubutsuShogiWin64
 
+dist_noinst_HEADERS     =  $(LIBNOINSTHEADERS)
+
 ##
 ##    Build Programs.
 ##
 
-DoubutsuShogiWin64_SOURCES   =  DoubutsuShogiWin64.cpp
+DoubutsuShogiWin64_SOURCES   =  \
+        DoubutsuShogiWin64.cpp  \
+        Resources.cpp
 DoubutsuShogiWin64_LDADD     =  -ldsgInterface
 
