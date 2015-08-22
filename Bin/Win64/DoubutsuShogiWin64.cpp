@@ -39,10 +39,14 @@ int     g_movY;
 const   char
 g_szClassName[] = "DoubutsuShogiWindow";
 
-constexpr   int     LEFT_MARGIN = 64;
-constexpr   int     TOP_MARGIN  = 64;
-constexpr   int     FIELDWIDTH  = 64;
-constexpr   int     FIELDHEIGHT = 64;
+constexpr   int     BOARD_TOP_OFFSET    = 1;
+constexpr   int     BOARD_LEFT_OFFSET   = 0;
+constexpr   int     LEFT_MARGIN         = 64;
+constexpr   int     TOP_MARGIN          = 64;
+constexpr   int     FIELD_WIDTH         = 64;
+constexpr   int     FIELD_HEIGHT        = 64;
+constexpr   int     VIEW_NUM_COLS       = (POS_NUM_COLS);
+constexpr   int     VIEW_NUM_ROWS       = (POS_NUM_ROWS) + 2;
 
 /**
 **    画面表示の処理時に参照する座標の変換表。
@@ -139,12 +143,12 @@ onLButtonDown(
 {
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
 
-    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
-    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
     if ( (mx < 0) || (my < 0)
-            || (POS_NUM_COLS <= mx)
-            || (POS_NUM_ROWS <= my) )
+            || (VIEW_NUM_COLS <= mx)
+            || (VIEW_NUM_ROWS <= my) )
     {
         return ( 0 );
     }
@@ -174,12 +178,12 @@ onLButtonUp(
         return ( 0 );
     }
 
-    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
-    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
     if ( (mx < 0) || (my < 0)
-            || (POS_NUM_COLS <= mx)
-            || (POS_NUM_ROWS <= my) )
+            || (VIEW_NUM_COLS <= mx)
+            || (VIEW_NUM_ROWS <= my) )
     {
         g_selX  = -1;
         g_selY  = -1;
@@ -191,9 +195,23 @@ onLButtonUp(
         return ( 0 );
     }
 
-    gc.playMoveAction(
-            s_tblColEnc[g_selX],  s_tblRowEnc[g_selY],
-            s_tblColEnc[mx],  s_tblRowEnc[my]);
+    if ( (my == 0) ) {
+        //  後手の持ち駒を打つ。    //
+    } else if ( my == POS_NUM_ROWS + 1 ) {
+        //  先手の持ち駒を打つ。    //
+    } else {
+        //  盤上の駒を移動させる。  //
+        gc.playMoveAction(
+                s_tblColEnc[g_selX - BOARD_LEFT_OFFSET],
+                s_tblRowEnc[g_selY - BOARD_TOP_OFFSET],
+                s_tblColEnc[mx - BOARD_LEFT_OFFSET],
+                s_tblRowEnc[my - BOARD_TOP_OFFSET]);
+    }
+
+    g_selX  = -1;
+    g_selY  = -1;
+    g_movX  = -1;
+    g_movY  = -1;
     ::InvalidateRect(hWnd, NULL, TRUE);
 
     return ( 0 );
@@ -216,12 +234,12 @@ onMouseMove(
         return ( 0 );
     }
 
-    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
-    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
-    if ( (mx < 0) || (my < 0)
-            || (POS_NUM_COLS <= mx)
-            || (POS_NUM_ROWS <= my) )
+    if ( (mx < BOARD_LEFT_OFFSET) || (my < BOARD_TOP_OFFSET)
+            || (VIEW_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
+            || (VIEW_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
     {
         return ( 0 );
     }
@@ -240,56 +258,97 @@ onPaint(
         const   HWND    hWnd,
         const   HDC     hDC)
 {
-    for ( int y = 0; y <= 4; ++ y ) {
-        const  int  dy  = (y * FIELDHEIGHT) + TOP_MARGIN;
-        const  int  dx  = (3 * FIELDWIDTH) + LEFT_MARGIN;
-        ::MoveToEx(hDC, LEFT_MARGIN, dy, NULL);
+    int     sx, sy, dx, dy;
+
+    for ( int y = 0; y <= POS_NUM_ROWS; ++ y ) {
+        sx  = ((BOARD_LEFT_OFFSET) * FIELD_WIDTH) + LEFT_MARGIN;
+        sy  = ((y + BOARD_TOP_OFFSET) * FIELD_HEIGHT) + TOP_MARGIN;
+        dx  = sx + (POS_NUM_COLS * FIELD_WIDTH);
+        dy  = sy;
+        ::MoveToEx(hDC, sx, sy, NULL);
         ::LineTo  (hDC, dx, dy);
     }
 
-    for ( int x = 0; x <= 3; ++ x ) {
-        const  int  dx  = (x * FIELDWIDTH) + LEFT_MARGIN;
-        const  int  dy  = (4 * FIELDHEIGHT) + TOP_MARGIN;
-        ::MoveToEx(hDC, dx, TOP_MARGIN, NULL);
+    for ( int x = 0; x <= POS_NUM_COLS; ++ x ) {
+        sx  = ((x + BOARD_LEFT_OFFSET) * FIELD_WIDTH) + LEFT_MARGIN;
+        sy  = ((BOARD_TOP_OFFSET) * FIELD_HEIGHT) + TOP_MARGIN;
+        dx  = sx;
+        dy  = sy + (POS_NUM_ROWS * FIELD_HEIGHT);
+        ::MoveToEx(hDC, sx, sy, NULL);
         ::LineTo  (hDC, dx, dy);
     }
 
     if ( (g_selX >= 0) && (g_selY >= 0) ) {
         HBRUSH  hbrBack = ::CreateSolidBrush( RGB(255, 255, 0) );
 
-        const  int  dx  = (g_selX * FIELDWIDTH) + LEFT_MARGIN;
-        const  int  dy  = (g_selY * FIELDHEIGHT) + TOP_MARGIN;
+        dx  = ((g_selX) * FIELD_WIDTH) + LEFT_MARGIN;
+        dy  = ((g_selY) * FIELD_HEIGHT) + TOP_MARGIN;
 
         HBRUSH  hbrOld  = (HBRUSH)::SelectObject(hDC, hbrBack);
-        ::Rectangle(hDC, dx, dy, dx + FIELDWIDTH, dy + FIELDHEIGHT);
+        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
         ::SelectObject(hDC, hbrOld);
         ::DeleteObject(hbrBack);
     }
     if ( (g_movX >= 0) && (g_movY >= 0) ) {
         HBRUSH  hbrBack = ::CreateSolidBrush( RGB(0, 0, 255) );
 
-        const  int  dx  = (g_movX * FIELDWIDTH) + LEFT_MARGIN;
-        const  int  dy  = (g_movY * FIELDHEIGHT) + TOP_MARGIN;
+        dx  = ((g_movX) * FIELD_WIDTH) + LEFT_MARGIN;
+        dy  = ((g_movY) * FIELD_HEIGHT) + TOP_MARGIN;
 
         HBRUSH  hbrOld  = (HBRUSH)::SelectObject(hDC, hbrBack);
-        ::Rectangle(hDC, dx, dy, dx + FIELDWIDTH, dy + FIELDHEIGHT);
+        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
         ::SelectObject(hDC, hbrOld);
         ::DeleteObject(hbrBack);
     }
 
     ViewBuffer  vb;
     gc.writeToViewBuffer(vb);
-    for ( int y = 0; y < 4; ++ y ) {
-        for ( int x = 0; x < 3; ++ x ) {
-            const  int  dx  = (x * FIELDWIDTH) + LEFT_MARGIN
-                + (FIELDWIDTH / 4);
-            const  int  dy  = (y * FIELDHEIGHT) + TOP_MARGIN
-                + (FIELDHEIGHT / 2);
+
+    //  後手の持ち駒を表示する。    //
+    int     tx  = 0;
+    for ( int c = PIECE_WHITE_PAWN; c < PIECE_WHITE_GOLD; ++ c ) {
+        const  int  numHand = vb.nHands[c];
+        if ( numHand <= 0 ) { continue; }
+        int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
+        int  dy = TOP_MARGIN;
+        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+        dx  += (FIELD_WIDTH / 4);
+        dy  += (FIELD_HEIGHT / 2);
+
+        const  char  *  pn  = s_tblHandName[c][numHand];
+        ::TextOut(hDC, dx, dy, pn, strlen(pn));
+        ++ tx;
+    }
+
+    //  盤上にある駒を表示する。    //
+    for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
+        for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
+            const  int  dx  = (x * FIELD_WIDTH)
+                + LEFT_MARGIN + (FIELD_WIDTH / 4);
+            const  int  dy  = ((y + BOARD_TOP_OFFSET) * FIELD_HEIGHT)
+                + TOP_MARGIN + (FIELD_HEIGHT / 2);
             const  int  pi  = s_tblPosEnc[y][x];
             const  int  dp  = vb.piBoard[pi];
             const  char  *  pn  = s_tblPieceName[dp];
             ::TextOut(hDC, dx, dy, pn, strlen(pn));
         }
+    }
+
+    //  先手の持ち駒を表示する。    //
+    tx  = 0;
+    for ( int c = PIECE_BLACK_PAWN; c < PIECE_BLACK_GOLD; ++ c ) {
+        const  int  numHand = vb.nHands[c];
+        if ( numHand <= 0 ) { continue; }
+        int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
+        int  dy = (POS_NUM_ROWS + BOARD_TOP_OFFSET) * FIELD_HEIGHT
+                + TOP_MARGIN;
+        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+        dx  += (FIELD_WIDTH / 4);
+        dy  += (FIELD_HEIGHT / 2);
+
+        const  char  *  pn  = s_tblHandName[c][numHand];
+        ::TextOut(hDC, dx, dy, pn, strlen(pn));
+        ++ tx;
     }
 
     return ( 0 );
@@ -400,7 +459,7 @@ WinMain(
     cs.style        =  WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
     cs.style        |= WS_OVERLAPPED;
 
-    RECT    rect    = { 0, 0, 640, 480 };
+    RECT    rect    = { 0, 0, 640, 640 };
     ::AdjustWindowRectEx(&rect, cs.style, FALSE, cs.dwExStyle);
 
     const  int  w   = (rect.right - rect.left);
