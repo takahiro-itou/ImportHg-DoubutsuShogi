@@ -18,6 +18,7 @@
 
 #include    "Resources.h"
 
+#include    <sstream>
 #include    <Wingdi.h>
 
 #if !defined( UTL_HELP_UNUSED_ARGUMENT )
@@ -47,6 +48,15 @@ constexpr   int     FIELD_WIDTH         = 64;
 constexpr   int     FIELD_HEIGHT        = 64;
 constexpr   int     VIEW_NUM_COLS       = (POS_NUM_COLS);
 constexpr   int     VIEW_NUM_ROWS       = (POS_NUM_ROWS) + 2;
+
+constexpr   int     WINDOW_WIDTH        = 640;
+constexpr   int     WINDOW_HEIGHT       = 640;
+
+constexpr   int     KIFU_VIEW_LEFT      = LEFT_MARGIN
+        + ((VIEW_NUM_COLS + 1) * FIELD_WIDTH);
+constexpr   int     KIFU_VIEW_WIDTH     = WINDOW_WIDTH - KIFU_VIEW_LEFT;
+
+constexpr   int     KIFU_FONT_HEIGHT    = 24;
 
 /**
 **    画面表示の処理時に参照する座標の変換表。
@@ -83,11 +93,21 @@ s_tblHandEncWhite[]  = {
 };
 
 
+const   char
+s_tblColName[POS_NUM_COLS]  = {
+    'A', 'B', 'C'
+};
+
+const   char
+s_tblRowName[POS_NUM_ROWS]  = {
+    '1', '2', '3', '4'
+};
+
 /**
 **    画面に表示する駒の名称。
 **/
 
-constexpr   const   char  *
+const   char  *
 s_tblPieceName[NUM_PIECE_TYPES]     = {
     "",
     "PawnA",  "Bis.A",  "RookA",  "KingA",  "GoldA",
@@ -98,7 +118,7 @@ s_tblPieceName[NUM_PIECE_TYPES]     = {
 **    画面に表示する持ち駒の表記。
 **/
 
-constexpr   const   char  *
+const   char  *
 s_tblHandName[NUM_PIECE_TYPES][3]   = {
     { nullptr,  nullptr,  nullptr },
     { "",   "P",   "P2"  },
@@ -380,8 +400,8 @@ onPaint(
     {
         const  int  numHand = vb.nHands[c];
         if ( numHand <= 0 ) { continue; }
-        int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
-        int  dy = TOP_MARGIN;
+        dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
+        dy = TOP_MARGIN;
 
         if ( (g_selY != 0)
                 || (g_selX != tx + BOARD_LEFT_OFFSET) )
@@ -399,12 +419,11 @@ onPaint(
     //  盤上にある駒を表示する。    //
     for ( int y = 0; y < POS_NUM_ROWS; ++ y ) {
         for ( int x = 0; x < POS_NUM_COLS; ++ x ) {
-            const  int  dx  = (x * FIELD_WIDTH)
-                + LEFT_MARGIN + (FIELD_WIDTH / 4);
-            const  int  dy  = ((y + BOARD_TOP_OFFSET) * FIELD_HEIGHT)
-                + TOP_MARGIN + (FIELD_HEIGHT / 2);
-            const  int  pi  = s_tblPosEnc[y][x];
-            const  int  dp  = vb.piBoard[pi];
+            dx  = (x * FIELD_WIDTH) + LEFT_MARGIN + (FIELD_WIDTH / 4);
+            dy  = ((y + BOARD_TOP_OFFSET) * FIELD_HEIGHT)
+                        + TOP_MARGIN + (FIELD_HEIGHT / 2);
+            const  int      pi  = s_tblPosEnc[y][x];
+            const  int      dp  = vb.piBoard[pi];
             const  char  *  pn  = s_tblPieceName[dp];
             ::TextOut(hDC, dx, dy, pn, strlen(pn));
         }
@@ -416,9 +435,8 @@ onPaint(
     {
         const  int  numHand = vb.nHands[c];
         if ( numHand <= 0 ) { continue; }
-        int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
-        int  dy = (POS_NUM_ROWS + BOARD_TOP_OFFSET) * FIELD_HEIGHT
-                + TOP_MARGIN;
+        dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
+        dy = (POS_NUM_ROWS + BOARD_TOP_OFFSET) * FIELD_HEIGHT + TOP_MARGIN;
 
         if ( (g_selY != POS_NUM_ROWS + BOARD_TOP_OFFSET)
                 || (g_selX != tx + BOARD_LEFT_OFFSET) )
@@ -431,6 +449,38 @@ onPaint(
 
         const  char  *  pn  = s_tblHandName[c][numHand];
         ::TextOut(hDC, dx, dy, pn, strlen(pn));
+    }
+
+    //  現在の棋譜を表示する。  //
+    typedef     GameController::ActionViewList  ActionViewList;
+    typedef     ActionViewList::const_iterator  ActIter;
+
+    ActionViewList  avl;
+    gc.makeActionViewList(avl);
+    int             idx     = 0;
+    const  ActIter  itrEnd  = avl.end();
+    for ( ActIter itr = avl.begin(); itr != itrEnd; ++ itr, ++ idx ) {
+        std::stringstream   ss;
+
+        const  ActionView  act  = (* itr);
+        if ( !(idx & 1) ) {
+            ss  << ((idx / 2) + 1) << ":  ";
+        }
+        if ( act.putHand != PIECE_EMPTY ) {
+            ss  << '.' << s_tblHandName[(act.putHand)][1];
+        } else {
+            ss  << s_tblColName[(act.xOldCol)]
+                << s_tblRowName[(act.yOldRow)];
+        }
+        ss  << s_tblColName[(act.xNewCol)]
+            << s_tblRowName[(act.yNewRow)];
+
+        dx  = KIFU_VIEW_LEFT;
+        if ( idx & 1 ) {
+            dx  += (KIFU_VIEW_WIDTH / 2);
+        }
+        const  int  dy  = ((idx / 2) * KIFU_FONT_HEIGHT) + TOP_MARGIN;
+        ::TextOut(hDC, dx, dy, ss.str().c_str(), ss.str().length());
     }
 
     return ( 0 );
@@ -541,7 +591,7 @@ WinMain(
     cs.style        =  WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
     cs.style        |= WS_OVERLAPPED;
 
-    RECT    rect    = { 0, 0, 640, 640 };
+    RECT    rect    = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     ::AdjustWindowRectEx(&rect, cs.style, FALSE, cs.dwExStyle);
 
     const  int  w   = (rect.right - rect.left);
