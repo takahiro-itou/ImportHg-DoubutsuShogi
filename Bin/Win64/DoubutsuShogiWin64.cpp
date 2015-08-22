@@ -193,17 +193,23 @@ onLButtonUp(
     const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELD_WIDTH;
     const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
-    if ( (mx < 0) || (my < 0)
-            || (VIEW_NUM_COLS <= mx)
-            || (VIEW_NUM_ROWS <= my) )
+    if ( (mx < BOARD_LEFT_OFFSET) || (my < BOARD_TOP_OFFSET)
+            || (POS_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
+            || (POS_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
     {
         g_selX  = -1;
         g_selY  = -1;
+        g_movX  = -1;
+        g_movY  = -1;
+        ::InvalidateRect(hWnd, NULL, TRUE);
         return ( 0 );
     }
     if ( (mx == g_selX) && (my == g_selY) ) {
         g_selX  = -1;
         g_selY  = -1;
+        g_movX  = -1;
+        g_movY  = -1;
+        ::InvalidateRect(hWnd, NULL, TRUE);
         return ( 0 );
     }
 
@@ -258,14 +264,15 @@ onMouseMove(
     const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
     if ( (mx < BOARD_LEFT_OFFSET) || (my < BOARD_TOP_OFFSET)
-            || (VIEW_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
-            || (VIEW_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
+            || (POS_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
+            || (POS_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
     {
-        return ( 0 );
+        g_movX  = -1;
+        g_movY  = -1;
+    } else {
+        g_movX  = mx;
+        g_movY  = my;
     }
-
-    g_movX  = mx;
-    g_movY  = my;
     ::InvalidateRect(hWnd, NULL, TRUE);
 
     return ( 0 );
@@ -332,7 +339,13 @@ onPaint(
         if ( numHand <= 0 ) { continue; }
         int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
         int  dy = TOP_MARGIN;
-        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+
+        if ( (g_selY != 0)
+                || (g_selX != tx + BOARD_LEFT_OFFSET) )
+        {
+            ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+        }
+
         dx  += (FIELD_WIDTH / 4);
         dy  += (FIELD_HEIGHT / 2);
 
@@ -363,7 +376,13 @@ onPaint(
         int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
         int  dy = (POS_NUM_ROWS + BOARD_TOP_OFFSET) * FIELD_HEIGHT
                 + TOP_MARGIN;
-        ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+
+        if ( (g_selY != POS_NUM_ROWS + BOARD_TOP_OFFSET)
+                || (g_selX != tx + BOARD_LEFT_OFFSET) )
+        {
+            ::Rectangle(hDC, dx, dy, dx + FIELD_WIDTH, dy + FIELD_HEIGHT);
+        }
+
         dx  += (FIELD_WIDTH / 4);
         dy  += (FIELD_HEIGHT / 2);
 
