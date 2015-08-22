@@ -24,6 +24,36 @@ g_szClassName[] = "DoubutsuShogiWindow";
 }   //  End of (Unnamed) namespace.
 
 //----------------------------------------------------------------
+/**   メニュー項目のクリック処理。
+**
+**/
+
+LRESULT
+OnCommandMenuClick(
+        HWND    hWnd,
+        UINT    wID,
+        UINT    wNotify)
+{
+    switch ( wID ) {
+    case  MENU_ID_FILE_EXIT:
+        ::MessageBox(
+                hWnd,
+                "#DEBUG : OnCommand : Selected : [File] - [Exit]",
+                "DEBUG",  MB_YESNO | MB_ICONQUESTION);
+        break;
+    case  MENU_ID_HELP_SHOW:
+        ::MessageBox(
+                hWnd,
+                "#DEBUG : OnCommand : Selected : [Help] - [Show]",
+                "DEBUG",  MB_OK | MB_ICONQUESTION);
+        break;
+    }
+    return ( 0 );
+
+}
+
+
+//----------------------------------------------------------------
 /**   ウィンドウプロシージャ。
 **
 **/
@@ -38,6 +68,13 @@ WindowProc(
     switch ( uMsg ) {
     case  WM_COMMAND:
         //  メニュー選択時の処理。  //
+        if ( lParam == 0 ) {
+            return ( OnCommandMenuClick(
+                             hWnd,
+                             wParam & 0xFFFF,
+                             (wParam >> 16) & 0xFFFF)
+            );
+        }
         break;
     case  WM_DESTROY:
         //  ウィンドウを閉じる。    //
