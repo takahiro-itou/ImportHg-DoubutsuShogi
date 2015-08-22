@@ -71,5 +71,5 @@ dist_noinst_HEADERS     =  $(LIBNOINSTHEADERS)
 DoubutsuShogiWin64_SOURCES   =  \
         DoubutsuShogiWin64.cpp  \
         Resources.cpp
-DoubutsuShogiWin64_LDADD     =  -ldsgInterface
+DoubutsuShogiWin64_LDADD     =  -ldsgInterface  -lGdi32
 

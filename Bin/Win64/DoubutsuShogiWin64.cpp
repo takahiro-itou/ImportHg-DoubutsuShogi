@@ -14,16 +14,87 @@
 **      @file       Bin/Win64/DoubutsuShogiWin64.cpp
 **/
 
+#include    "DoubutsuShogi/Interface/GameController.h"
+
 #include    "Resources.h"
+
+#include    <Wingdi.h>
 
 #if !defined( UTL_HELP_UNUSED_ARGUMENT )
 #    define     UTL_HELP_UNUSED_ARGUMENT(var)   (void)(var)
 #endif
 
+using   namespace   DSHOGI_NAMESPACE;
+using   namespace   DSHOGI_NAMESPACE::INTERFACE;
+
 namespace  {
+
+GameController  gc;
+
+int     g_selX;
+int     g_selY;
+int     g_movX;
+int     g_movY;
 
 const   char
 g_szClassName[] = "DoubutsuShogiWindow";
+
+constexpr   int     LEFT_MARGIN = 64;
+constexpr   int     TOP_MARGIN  = 64;
+constexpr   int     FIELDWIDTH  = 64;
+constexpr   int     FIELDHEIGHT = 64;
+
+/**
+**    画面表示の処理時に参照する座標の変換表。
+**/
+
+constexpr   PosMat
+s_tblPosEnc[POS_NUM_ROWS][POS_NUM_COLS] = {
+    {   POS_MAT_A1,     POS_MAT_B1,     POS_MAT_C1  },
+    {   POS_MAT_A2,     POS_MAT_B2,     POS_MAT_C2  },
+    {   POS_MAT_A3,     POS_MAT_B3,     POS_MAT_C3  },
+    {   POS_MAT_A4,     POS_MAT_B4,     POS_MAT_C4  }
+};
+
+constexpr   PosCol
+s_tblColEnc[POS_NUM_COLS]   = {
+    POS_COL_A,  POS_COL_B,  POS_COL_C
+};
+
+constexpr   PosRow
+s_tblRowEnc[POS_NUM_ROWS]   = {
+    POS_ROW_1,  POS_ROW_2,  POS_ROW_3,  POS_ROW_4
+};
+
+/**
+**    画面に表示する駒の名称。
+**/
+
+constexpr   const   char  *
+s_tblPieceName[NUM_PIECE_TYPES]     = {
+    "",
+    "PawnA",  "Bis.A",  "RookA",  "KingA",  "GoldA",
+    "PawnV",  "Bis.V",  "RookV",  "KingV",  "GoldV"
+};
+
+/**
+**    画面に表示する持ち駒の表記。
+**/
+
+constexpr   const   char  *
+s_tblHandName[NUM_PIECE_TYPES][3]   = {
+    { nullptr,  nullptr,  nullptr },
+    { "",   "P",   "P2"  },
+    { "",   "B",   "B2"  },
+    { "",   "R",   "R2"  },
+    { "",   "K",   "K2"  },
+    { "",   "G",   "G2"  },     //  これが出たらバグ。  //
+    { "",   "P",   "P2"  },
+    { "",   "B",   "B2"  },
+    { "",   "R",   "R2"  },
+    { "",   "K",   "K2"  },
+    { "",   "G",   "G2"  }      //  これが出たらバグ。  //
+};
 
 }   //  End of (Unnamed) namespace.
 
@@ -66,10 +137,22 @@ onLButtonDown(
         const   UINT    xPos,
         const   UINT    yPos)
 {
-    UTL_HELP_UNUSED_ARGUMENT(hWnd);
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
-    UTL_HELP_UNUSED_ARGUMENT(xPos);
-    UTL_HELP_UNUSED_ARGUMENT(yPos);
+
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+
+    if ( (mx < 0) || (my < 0)
+            || (POS_NUM_COLS <= mx)
+            || (POS_NUM_ROWS <= my) )
+    {
+        return ( 0 );
+    }
+
+    g_selX  = mx;
+    g_selY  = my;
+    ::InvalidateRect(hWnd, NULL, TRUE);
+
     return ( 0 );
 }
 
@@ -86,8 +169,33 @@ onLButtonUp(
 {
     UTL_HELP_UNUSED_ARGUMENT(hWnd);
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
-    UTL_HELP_UNUSED_ARGUMENT(xPos);
-    UTL_HELP_UNUSED_ARGUMENT(yPos);
+
+    if ( (g_selX < 0) || (g_selY < 0) ) {
+        return ( 0 );
+    }
+
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+
+    if ( (mx < 0) || (my < 0)
+            || (POS_NUM_COLS <= mx)
+            || (POS_NUM_ROWS <= my) )
+    {
+        g_selX  = -1;
+        g_selY  = -1;
+        return ( 0 );
+    }
+    if ( (mx == g_selX) && (my == g_selY) ) {
+        g_selX  = -1;
+        g_selY  = -1;
+        return ( 0 );
+    }
+
+    gc.playMoveAction(
+            s_tblColEnc[g_selX],  s_tblRowEnc[g_selY],
+            s_tblColEnc[mx],  s_tblRowEnc[my]);
+    ::InvalidateRect(hWnd, NULL, TRUE);
+
     return ( 0 );
 }
 
@@ -102,10 +210,26 @@ onMouseMove(
         const   UINT    xPos,
         const   UINT    yPos)
 {
-    UTL_HELP_UNUSED_ARGUMENT(hWnd);
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
-    UTL_HELP_UNUSED_ARGUMENT(xPos);
-    UTL_HELP_UNUSED_ARGUMENT(yPos);
+
+    if ( (g_selX < 0) || (g_selY < 0) ) {
+        return ( 0 );
+    }
+
+    const  int  mx  = ((int)(xPos) - LEFT_MARGIN) / FIELDWIDTH;
+    const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELDHEIGHT;
+
+    if ( (mx < 0) || (my < 0)
+            || (POS_NUM_COLS <= mx)
+            || (POS_NUM_ROWS <= my) )
+    {
+        return ( 0 );
+    }
+
+    g_movX  = mx;
+    g_movY  = my;
+    ::InvalidateRect(hWnd, NULL, TRUE);
+
     return ( 0 );
 }
 
@@ -116,6 +240,58 @@ onPaint(
         const   HWND    hWnd,
         const   HDC     hDC)
 {
+    for ( int y = 0; y <= 4; ++ y ) {
+        const  int  dy  = (y * FIELDHEIGHT) + TOP_MARGIN;
+        const  int  dx  = (3 * FIELDWIDTH) + LEFT_MARGIN;
+        ::MoveToEx(hDC, LEFT_MARGIN, dy, NULL);
+        ::LineTo  (hDC, dx, dy);
+    }
+
+    for ( int x = 0; x <= 3; ++ x ) {
+        const  int  dx  = (x * FIELDWIDTH) + LEFT_MARGIN;
+        const  int  dy  = (4 * FIELDHEIGHT) + TOP_MARGIN;
+        ::MoveToEx(hDC, dx, TOP_MARGIN, NULL);
+        ::LineTo  (hDC, dx, dy);
+    }
+
+    if ( (g_selX >= 0) && (g_selY >= 0) ) {
+        HBRUSH  hbrBack = ::CreateSolidBrush( RGB(255, 255, 0) );
+
+        const  int  dx  = (g_selX * FIELDWIDTH) + LEFT_MARGIN;
+        const  int  dy  = (g_selY * FIELDHEIGHT) + TOP_MARGIN;
+
+        HBRUSH  hbrOld  = (HBRUSH)::SelectObject(hDC, hbrBack);
+        ::Rectangle(hDC, dx, dy, dx + FIELDWIDTH, dy + FIELDHEIGHT);
+        ::SelectObject(hDC, hbrOld);
+        ::DeleteObject(hbrBack);
+    }
+    if ( (g_movX >= 0) && (g_movY >= 0) ) {
+        HBRUSH  hbrBack = ::CreateSolidBrush( RGB(0, 0, 255) );
+
+        const  int  dx  = (g_movX * FIELDWIDTH) + LEFT_MARGIN;
+        const  int  dy  = (g_movY * FIELDHEIGHT) + TOP_MARGIN;
+
+        HBRUSH  hbrOld  = (HBRUSH)::SelectObject(hDC, hbrBack);
+        ::Rectangle(hDC, dx, dy, dx + FIELDWIDTH, dy + FIELDHEIGHT);
+        ::SelectObject(hDC, hbrOld);
+        ::DeleteObject(hbrBack);
+    }
+
+    ViewBuffer  vb;
+    gc.writeToViewBuffer(vb);
+    for ( int y = 0; y < 4; ++ y ) {
+        for ( int x = 0; x < 3; ++ x ) {
+            const  int  dx  = (x * FIELDWIDTH) + LEFT_MARGIN
+                + (FIELDWIDTH / 4);
+            const  int  dy  = (y * FIELDHEIGHT) + TOP_MARGIN
+                + (FIELDHEIGHT / 2);
+            const  int  pi  = s_tblPosEnc[y][x];
+            const  int  dp  = vb.piBoard[pi];
+            const  char  *  pn  = s_tblPieceName[dp];
+            ::TextOut(hDC, dx, dy, pn, strlen(pn));
+        }
+    }
+
     return ( 0 );
 }
 
@@ -162,6 +338,15 @@ WindowProc(
                          HIWORD(lParam) )
         );
         break;
+    case  WM_MOUSEMOVE:
+        return ( onMouseMove(
+                         hWnd,
+                         wParam,
+                         LOWORD(lParam),
+                         HIWORD(lParam) )
+        );
+        break;
+
     case  WM_PAINT:
         ; {
             PAINTSTRUCT     ps;
@@ -235,6 +420,12 @@ WinMain(
     if ( hWnd == 0 ) {
         return ( 0 );
     }
+
+    gc.resetGameBoard();
+    g_selX  = -1;
+    g_selY  = -1;
+    g_movX  = -1;
+    g_movY  = -1;
 
     ::ShowWindow(hWnd, nCmdShow);
     ::UpdateWindow(hWnd);
