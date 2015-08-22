@@ -70,6 +70,19 @@ s_tblRowEnc[POS_NUM_ROWS]   = {
     POS_ROW_1,  POS_ROW_2,  POS_ROW_3,  POS_ROW_4
 };
 
+constexpr   INTERFACE::PieceIndex
+s_tblHandEncBlack[]  = {
+    PIECE_BLACK_PAWN,  PIECE_BLACK_BISHOP,  PIECE_BLACK_ROOK,
+    PIECE_BLACK_KING
+};
+
+constexpr   INTERFACE::PieceIndex
+s_tblHandEncWhite[]  = {
+    PIECE_WHITE_PAWN,  PIECE_WHITE_BISHOP,  PIECE_WHITE_ROOK,
+    PIECE_WHITE_KING
+};
+
+
 /**
 **    画面に表示する駒の名称。
 **/
@@ -305,7 +318,8 @@ onPaint(
 
     //  後手の持ち駒を表示する。    //
     int     tx  = 0;
-    for ( int c = PIECE_WHITE_PAWN; c < PIECE_WHITE_GOLD; ++ c ) {
+    for ( int c = PIECE_WHITE_PAWN; c < PIECE_WHITE_GOLD; ++ c, ++ tx )
+    {
         const  int  numHand = vb.nHands[c];
         if ( numHand <= 0 ) { continue; }
         int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
@@ -316,7 +330,6 @@ onPaint(
 
         const  char  *  pn  = s_tblHandName[c][numHand];
         ::TextOut(hDC, dx, dy, pn, strlen(pn));
-        ++ tx;
     }
 
     //  盤上にある駒を表示する。    //
@@ -335,7 +348,8 @@ onPaint(
 
     //  先手の持ち駒を表示する。    //
     tx  = 0;
-    for ( int c = PIECE_BLACK_PAWN; c < PIECE_BLACK_GOLD; ++ c ) {
+    for ( int c = PIECE_BLACK_PAWN; c < PIECE_BLACK_GOLD; ++ c, ++ tx )
+    {
         const  int  numHand = vb.nHands[c];
         if ( numHand <= 0 ) { continue; }
         int  dx = (tx * FIELD_WIDTH) + LEFT_MARGIN;
@@ -347,7 +361,6 @@ onPaint(
 
         const  char  *  pn  = s_tblHandName[c][numHand];
         ::TextOut(hDC, dx, dy, pn, strlen(pn));
-        ++ tx;
     }
 
     return ( 0 );
