@@ -14,6 +14,8 @@
 **      @file       Bin/Win64/DoubutsuShogiWin64.cpp
 **/
 
+#define     STRICT
+#define     WIN32_LEAN_AND_MEAN
 #include    <windows.h>
 
 namespace  {
@@ -61,8 +63,9 @@ WinMain(
         LPSTR       lpCmdLine,
         int         nCmdShow)
 {
-    WNDCLASSEX  wcEx;
+    HMENU       hMenu;
     HWND        hWnd;
+    WNDCLASSEX  wcEx;
 
     wcEx.cbSize         = sizeof(WNDCLASSEX);
     wcEx.style          = CS_HREDRAW | CS_VREDRAW;
@@ -81,12 +84,31 @@ WinMain(
         return ( 0 );
     }
 
+    hMenu   = ::CreateMenu();
+
+    ::InsertMenu(hMenu, 0, MF_BYPOSITION, 0, "File");
+
+    CREATESTRUCT    cs;
+    cs.dwExStyle    =  WS_EX_CLIENTEDGE;
+    cs.style        =  WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+    cs.style        |= WS_OVERLAPPED;
+
+    RECT    rect    = { 0, 0, 640, 480 };
+    ::AdjustWindowRectEx(&rect, cs.style, FALSE, cs.dwExStyle);
+
+    const  int  w   = (rect.right - rect.left);
+    const  int  h   = (rect.bottom - rect.top);
+    cs.x            =  CW_USEDEFAULT;
+    cs.y            =  CW_USEDEFAULT;
+    cs.cx           =  w;
+    cs.cy           =  h;
+
     hWnd    = ::CreateWindowEx(
-                    0, wcEx.lpszClassName, "Doubutsu Shogi (WIN64)",
-                    WS_OVERLAPPEDWINDOW,
-                    CW_USEDEFAULT, CW_USEDEFAULT,
-                    CW_USEDEFAULT, CW_USEDEFAULT,
-                    NULL, NULL, hInst, NULL);
+                    cs.dwExStyle,
+                    wcEx.lpszClassName, "Doubutsu Shogi (WIN64)",
+                    cs.style,
+                    cs.x, cs.y, cs.cx, cs.cy,
+                    NULL, hMenu, hInst, NULL);
 
     if ( hWnd == 0 ) {
         return ( 0 );
