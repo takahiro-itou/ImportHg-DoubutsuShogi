@@ -76,6 +76,7 @@ dnl
 AC_CONFIG_FILES([
     Makefile
     Bin/Makefile
+    Bin/Win64/Makefile
     Lib/Makefile
     Lib/.Config/Makefile
     Lib/Common/Makefile

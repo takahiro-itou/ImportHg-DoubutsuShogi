@@ -3,6 +3,14 @@
 ##    List of Directories.
 ##
 
+SUBMODULES              =  .
+
+if  DSHOGI_AMCNF_ENABLE_WINDOWS_H
+SUBMODULES              += Win64
+endif
+
+SUBDIRS                 =  .  $(SUBMODULES)
+
 SRCTOPDIR               =  @top_srcdir@
 INCTOPDIR               =  $(SRCTOPDIR)/Include
 INCPKGDIR               =  $(INCTOPDIR)/DoubutsuShogi
@@ -37,7 +45,6 @@ AM_LDFLAGS              =  -L$(LIBTOPDIR)
 
 bin_PROGRAMS            =  \
         DoubutsuShogi
-
 
 ##
 ##    Build Programs.
