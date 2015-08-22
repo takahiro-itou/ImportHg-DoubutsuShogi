@@ -36,16 +36,15 @@ OnCommandMenuClick(
 {
     switch ( wID ) {
     case  MENU_ID_FILE_EXIT:
-        ::MessageBox(
-                hWnd,
-                "#DEBUG : OnCommand : Selected : [File] - [Exit]",
-                "DEBUG",  MB_YESNO | MB_ICONQUESTION);
+        if ( ::MessageBox(
+                        hWnd,
+                        "Exit OK?",
+                        NULL,  MB_YESNO | MB_ICONQUESTION) == IDYES )
+        {
+            ::PostQuitMessage(0);
+        }
         break;
     case  MENU_ID_HELP_SHOW:
-        ::MessageBox(
-                hWnd,
-                "#DEBUG : OnCommand : Selected : [Help] - [Show]",
-                "DEBUG",  MB_OK | MB_ICONQUESTION);
         break;
     }
     return ( 0 );
