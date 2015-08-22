@@ -147,8 +147,8 @@ onLButtonDown(
     const  int  my  = ((int)(yPos) - TOP_MARGIN) / FIELD_HEIGHT;
 
     if ( (mx < 0) || (my < 0)
-            || (VIEW_NUM_COLS <= mx)
-            || (VIEW_NUM_ROWS <= my) )
+            || (VIEW_NUM_COLS + BOARD_LEFT_OFFSET <= mx)
+            || (VIEW_NUM_ROWS + BOARD_TOP_OFFSET  <= my) )
     {
         return ( 0 );
     }
@@ -171,7 +171,6 @@ onLButtonUp(
         const   UINT    xPos,
         const   UINT    yPos)
 {
-    UTL_HELP_UNUSED_ARGUMENT(hWnd);
     UTL_HELP_UNUSED_ARGUMENT(fwKeys);
 
     if ( (g_selX < 0) || (g_selY < 0) ) {
@@ -195,9 +194,9 @@ onLButtonUp(
         return ( 0 );
     }
 
-    if ( (my == 0) ) {
+    if ( (g_selY == 0) ) {
         //  後手の持ち駒を打つ。    //
-    } else if ( my == POS_NUM_ROWS + 1 ) {
+    } else if ( g_selY == POS_NUM_ROWS + BOARD_TOP_OFFSET ) {
         //  先手の持ち駒を打つ。    //
     } else {
         //  盤上の駒を移動させる。  //
