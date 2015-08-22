@@ -209,8 +209,16 @@ onLButtonUp(
 
     if ( (g_selY == 0) ) {
         //  後手の持ち駒を打つ。    //
+        gc.playPutAction(
+                s_tblColEnc[mx - BOARD_LEFT_OFFSET],
+                s_tblRowEnc[my - BOARD_TOP_OFFSET],
+                s_tblHandEncWhite[g_selX - BOARD_LEFT_OFFSET]);
     } else if ( g_selY == POS_NUM_ROWS + BOARD_TOP_OFFSET ) {
         //  先手の持ち駒を打つ。    //
+        gc.playPutAction(
+                s_tblColEnc[mx - BOARD_LEFT_OFFSET],
+                s_tblRowEnc[my - BOARD_TOP_OFFSET],
+                s_tblHandEncBlack[g_selX - BOARD_LEFT_OFFSET]);
     } else {
         //  盤上の駒を移動させる。  //
         gc.playMoveAction(
