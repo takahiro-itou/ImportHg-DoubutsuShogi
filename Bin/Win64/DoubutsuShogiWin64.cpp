@@ -168,6 +168,7 @@ onCommandMenuClick(
 **
 **/
 
+LRESULT
 onLButtonDown(
         const   HWND    hWnd,
         const   DWORD   fwKeys,
@@ -227,6 +228,7 @@ onLButtonDown(
 **
 **/
 
+LRESULT
 onLButtonUp(
         const   HWND    hWnd,
         const   DWORD   fwKeys,
@@ -297,6 +299,7 @@ onLButtonUp(
 **
 **/
 
+LRESULT
 onMouseMove(
         const   HWND    hWnd,
         const   DWORD   fwKeys,
